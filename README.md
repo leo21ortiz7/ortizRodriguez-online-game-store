@@ -8,7 +8,7 @@ Online Game Store
 PC & Web Capstone (INFO2644) - Fall/2026
 
 ## Project Description
-This app will basically be a Steam/Itch.io clone catered to small game developers to post and announce their games.
+This project will basically be a Steam/Itch.io clone made in NetBeans with Java Server Programming and contains a database managed with Docker Desktop and phpMyAdmin throughout the development process. The app will be catered to small game developers wanting to post and announce their games.
 - Registered developers will be able to post and manage their own games, uploading them with cover art, a title, a description, and a gallery of images, as well setting them up for preorder/order.
 - Registered customers will be able to search, filter, wish list, preorder, and order games to add to their library, as well as view developer's pages to directly view their content.
 - There will be a mock payment process designed in a way that would allow for a real one to be integrated.
