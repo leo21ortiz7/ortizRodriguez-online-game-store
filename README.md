@@ -19,4 +19,4 @@ As per the professor of the course, the scope of the original project is a bit l
 - Uploading and downloading actual games. Without this, posted games will be mock zip files or only contain the data described above.
 
 ## Current Status
-Planning stage
+Setup
