@@ -4,10 +4,21 @@
  */
 package data;
 
+import business.Game;
+import java.util.LinkedHashMap;
+
 /**
  *
  * @author leo21
  */
 public class FakeDB {
+    
+    public static LinkedHashMap<Integer, Game> selectAllGames() {
+        LinkedHashMap<Integer, Game> games = new LinkedHashMap<>();
+        
+        
+        
+        return games;
+    }
     
 }
