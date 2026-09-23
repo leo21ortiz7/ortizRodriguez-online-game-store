@@ -19,26 +19,25 @@ public class Game implements Serializable {
     private double gamePrice;
     private LocalDate releaseDate;
     private boolean released;
-    private String coverArtPath;
-    private String[] galleryImagePaths;
+    private byte[] coverArt;
+    private byte[][] galleryImages;
     private String gameFilePath;
 
     public Game() {
     }
 
-    public Game(String gameTitle, String gameDescription, String[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, String coverArtPath, String[] galleryImagePaths, String gameFilePath) {
+    public Game(String gameTitle, String gameDescription, String[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, byte[][] galleryImages) {
         this.gameTitle = gameTitle;
         this.gameDescription = gameDescription;
         this.gameTags = gameTags;
         this.gamePrice = gamePrice;
         this.releaseDate = releaseDate;
         this.released = released;
-        this.coverArtPath = coverArtPath;
-        this.galleryImagePaths = galleryImagePaths;
-        this.gameFilePath = gameFilePath;
+        this.coverArt = coverArt;
+        this.galleryImages = galleryImages;
     }
-    
-    public Game(int gameID, String gameTitle, String gameDescription, String[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, String coverArtPath, String[] galleryImagePaths, String gameFilePath) {
+
+    public Game(int gameID, String gameTitle, String gameDescription, String[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, byte[][] galleryImages) {
         this.gameID = gameID;
         this.gameTitle = gameTitle;
         this.gameDescription = gameDescription;
@@ -46,21 +45,11 @@ public class Game implements Serializable {
         this.gamePrice = gamePrice;
         this.releaseDate = releaseDate;
         this.released = released;
-        this.coverArtPath = coverArtPath;
-        this.galleryImagePaths = galleryImagePaths;
-        this.gameFilePath = gameFilePath;
+        this.coverArt = coverArt;
+        this.galleryImages = galleryImages;
     }
-    
-    public Game(String gameTitle, String gameDescription, String[] gameTags, double gamePrice, LocalDate releaseDate, boolean released) {
-        this.gameTitle = gameTitle;
-        this.gameDescription = gameDescription;
-        this.gameTags = gameTags;
-        this.gamePrice = gamePrice;
-        this.releaseDate = releaseDate;
-        this.released = released;
-    }
-    
-    public Game(int gameID, String gameTitle, String gameDescription, String[] gameTags, double gamePrice, LocalDate releaseDate, boolean released) {
+
+    public Game(int gameID, String gameTitle, String gameDescription, String[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, byte[][] galleryImages, String gameFilePath) {
         this.gameID = gameID;
         this.gameTitle = gameTitle;
         this.gameDescription = gameDescription;
@@ -68,7 +57,12 @@ public class Game implements Serializable {
         this.gamePrice = gamePrice;
         this.releaseDate = releaseDate;
         this.released = released;
+        this.coverArt = coverArt;
+        this.galleryImages = galleryImages;
+        this.gameFilePath = gameFilePath;
     }
+
+    
 
     public int getGameID() {
         return gameID;
@@ -128,20 +122,20 @@ public class Game implements Serializable {
         this.released = released;
     }
 
-    public String getCoverArtPath() {
-        return coverArtPath;
+    public byte[] getCoverArt() {
+        return coverArt;
     }
 
-    public void setCoverArtPath(String coverArtPath) {
-        this.coverArtPath = coverArtPath;
+    public void setCoverArt(byte[] coverArt) {
+        this.coverArt = coverArt;
     }
 
-    public String[] getGalleryImagePaths() {
-        return galleryImagePaths;
+    public byte[][] getGalleryImages() {
+        return galleryImages;
     }
 
-    public void setGalleryImagePaths(String[] galleryImagePaths) {
-        this.galleryImagePaths = galleryImagePaths;
+    public void setGalleryImagePaths(byte[][] galleryImages) {
+        this.galleryImages = galleryImages;
     }
 
     public String getGameFilePath() {
