@@ -4,6 +4,7 @@
  */
 package data;
 
+import business.Role;
 import business.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,14 +19,14 @@ import javax.naming.NamingException;
  * @author leo21
  */
 public class UserDA {
-    
+
     public static int insertUser(User user) throws NamingException, SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
 
         String query
-                = "INSERT INTO users (userid, username, email, password) "
+                = "INSERT INTO users (user_id, username, email, password) "
                 + "VALUES (?, ?, ?, ?)";
 
         ps = connection.prepareStatement(query);
@@ -46,29 +47,30 @@ public class UserDA {
 
     }
 
-    public static int updateUser(User oldUser, String newEmail, String newPassword) throws NamingException, SQLException {
+    public static int updateUser(User oldUser, String newUsername, String newEmail, String newPassword) throws NamingException, SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
 
         String query = "UPDATE users SET "
+                + "username = ?, "
                 + "email = ?, "
                 + "password = ? "
-                + "WHERE username = ?";
+                + "WHERE user_id = ?";
 
         ps = connection.prepareStatement(query);
-        ps.setString(1, newEmail);
-        ps.setString(2, newPassword);
-        ps.setString(3, oldUser.getUsername());
+        ps.setString(1, newUsername);
+        ps.setString(2, newEmail);
+        ps.setString(3, newPassword);
+        ps.setInt(4, oldUser.getUserID());
 
         int rows = ps.executeUpdate();
-        
+
         ps.close();
         pool.freeConnection(connection);
-        
-        User newUser = selectUser(oldUser.getUsername(), true);
+
         return rows;
-        
+
     }
 //    public static int delete(User user) {
 //        ConnectionPool pool = ConnectionPool.getInstance();
@@ -76,10 +78,10 @@ public class UserDA {
 //        PreparedStatement ps = null;
 //
 //        String query = "DELETE FROM User "
-//                + "WHERE Email = ?";
+//                + "WHERE user_id = ?";
 //        try {
 //            ps = connection.prepareStatement(query);
-//            ps.setString(1, user.getEmail());
+//            ps.setString(1, user.getUserID());
 //
 //            return ps.executeUpdate();
 //        } catch (SQLException e) {
@@ -105,7 +107,7 @@ public class UserDA {
 
         LinkedHashMap<Integer, User> users = new LinkedHashMap<>();
         while (rs.next()) {
-            Integer userID = rs.getInt("userID");
+            Integer userID = rs.getInt("user_id");
             String username = rs.getString("username");
             String email = rs.getString("email");
             String password = rs.getString("password");
@@ -121,27 +123,23 @@ public class UserDA {
 
     }
 
-    public static User selectUser(String username, boolean checkMethod) throws NamingException, SQLException {
+    public static User selectUser(int userID) throws NamingException, SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query = "";
 
-        if (checkMethod) {
-            query = "SELECT * FROM users "
-                    + "WHERE username = ?;";
-        } else {
-            query = "SELECT * FROM users "
-                    + "WHERE email = ?;";
-        }
+        query = "SELECT * FROM users "
+                + "WHERE user_id = ?;";
 
         ps = connection.prepareStatement(query);
-        ps.setString(1, username);
+        ps.setInt(1, userID);
         rs = ps.executeQuery();
         User user = null;
         if (rs.next()) {
             user = new User();
+            user.setUserID(rs.getInt("user_id"));
             user.setUsername(rs.getString("username"));
             user.setEmail(rs.getString("email"));
             user.setPassword(rs.getString("password"));
@@ -153,9 +151,93 @@ public class UserDA {
 
         return user;
     }
-    
+
     // Roles
+    public static int insertRole(Role role) throws NamingException, SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+
+        String query
+                = "INSERT INTO user_roles (role_id, user_id, role) "
+                + "VALUES (?, ?, ?)";
+
+        ps = connection.prepareStatement(query);
+
+        //Because we're sending a null value to tell the DB to take the autoID
+        //this needs to be setObject because setInt won't accept null
+        ps.setObject(1, role.getRoleID());
+        ps.setInt(2, role.getUserID());
+        ps.setString(3, role.getRoleName());
+
+        int rows = ps.executeUpdate();
+
+        ps.close();
+        pool.freeConnection(connection);
+
+        return rows;
+
+    }
     
+    public static LinkedHashMap<Integer, Role> selectAllRoles() throws NamingException, SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query = "SELECT * FROM user_roles";
+
+        ps = connection.prepareStatement(query);
+
+        rs = ps.executeQuery();
+
+        LinkedHashMap<Integer, Role> roles = new LinkedHashMap<>();
+        while (rs.next()) {
+            Integer roleID = rs.getInt("role_id");
+            Integer userID = rs.getInt("user_id");
+            String roleName = rs.getString("role");
+            Role role = new Role(roleID, userID, roleName);
+            roles.put(role.getRoleID(), role);
+        }
+
+        rs.close();
+        ps.close();
+        pool.freeConnection(connection);
+
+        return roles;
+
+    }
+
+    public static LinkedHashMap<Integer, Role> selectUserRoles(int roleUserID) throws NamingException, SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query = "SELECT * FROM user_roles"
+                    + "WHERE user_id = ?";
+
+        ps = connection.prepareStatement(query);
+        ps.setInt(1, roleUserID);
+
+        rs = ps.executeQuery();
+
+        LinkedHashMap<Integer, Role> roles = new LinkedHashMap<>();
+        while (rs.next()) {
+            Integer roleID = rs.getInt("role_id");
+            Integer userID = rs.getInt("user_id");
+            String roleName = rs.getString("role");
+            Role role = new Role(roleID, userID, roleName);
+            roles.put(role.getRoleID(), role);
+        }
+
+        rs.close();
+        ps.close();
+        pool.freeConnection(connection);
+
+        return roles;
+
+    }
 
     // Validation methods
     public static ArrayList<String> validateEmail(String email) {
@@ -193,5 +275,5 @@ public class UserDA {
 
         return errors;
     }
-    
+
 }
