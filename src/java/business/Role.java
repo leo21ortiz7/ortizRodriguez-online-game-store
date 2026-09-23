@@ -1,0 +1,51 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package business;
+
+import java.io.Serializable;
+
+/**
+ *
+ * @author leo21
+ */
+public class Role implements Serializable {
+    private int roleID, userID;
+    private String role;
+
+    public Role() {
+    }
+
+    public Role(int roleID, int userID, String role) {
+        this.roleID = roleID;
+        this.userID = userID;
+        this.role = role;
+    }
+
+    public int getRoleID() {
+        return roleID;
+    }
+
+    public void setRoleID(int roleID) {
+        this.roleID = roleID;
+    }
+
+    public int getUserID() {
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+    
+    
+}
