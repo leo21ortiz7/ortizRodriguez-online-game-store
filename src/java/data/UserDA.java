@@ -31,7 +31,6 @@ public class UserDA {
 
         ps = connection.prepareStatement(query);
 
-        //Because we're sending a null value to tell the DB to take the autoID
         //this needs to be setObject because setInt won't accept null
         ps.setObject(1, user.getUserID());
         ps.setString(2, user.getUsername());
@@ -72,28 +71,24 @@ public class UserDA {
         return rows;
 
     }
-//    public static int delete(User user) {
-//        ConnectionPool pool = ConnectionPool.getInstance();
-//        Connection connection = pool.getConnection();
-//        PreparedStatement ps = null;
-//
-//        String query = "DELETE FROM User "
-//                + "WHERE user_id = ?";
-//        try {
-//            ps = connection.prepareStatement(query);
-//            ps.setString(1, user.getUserID());
-//
-//            return ps.executeUpdate();
-//        } catch (SQLException e) {
-//            System.out.println(e);
-//            return 0;
-//        } finally {
-//            DBUtil.closePreparedStatement(ps);
-//            pool.freeConnection(connection);
-//        }
-//    }
+    
+    public static int delete(User user) throws NamingException, SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
 
-    public static LinkedHashMap<Integer, User> selectUsers() throws NamingException, SQLException {
+        String query = "DELETE FROM User "
+                + "WHERE user_id = ?";
+        
+        ps = connection.prepareStatement(query);
+        
+        ps.setInt(1, user.getUserID());
+
+        return ps.executeUpdate();
+
+    }
+
+    public static LinkedHashMap<Integer, User> selectAllUsers() throws NamingException, SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;

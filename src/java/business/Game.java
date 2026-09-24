@@ -12,7 +12,7 @@ import java.time.LocalDate;
  * @author leo21
  */
 public class Game implements Serializable {
-    private int gameID;
+    private int gameID, userID;
     private String gameTitle;
     private String gameDescription;
     private String[] gameTags;
@@ -26,7 +26,8 @@ public class Game implements Serializable {
     public Game() {
     }
 
-    public Game(String gameTitle, String gameDescription, String[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, byte[][] galleryImages) {
+    public Game(int userID, String gameTitle, String gameDescription, String[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, byte[][] galleryImages) {
+        this.userID = userID;
         this.gameTitle = gameTitle;
         this.gameDescription = gameDescription;
         this.gameTags = gameTags;
@@ -37,8 +38,9 @@ public class Game implements Serializable {
         this.galleryImages = galleryImages;
     }
 
-    public Game(int gameID, String gameTitle, String gameDescription, String[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, byte[][] galleryImages) {
+    public Game(int gameID, int userID, String gameTitle, String gameDescription, String[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, byte[][] galleryImages) {
         this.gameID = gameID;
+        this.userID = userID;
         this.gameTitle = gameTitle;
         this.gameDescription = gameDescription;
         this.gameTags = gameTags;
@@ -49,8 +51,22 @@ public class Game implements Serializable {
         this.galleryImages = galleryImages;
     }
 
-    public Game(int gameID, String gameTitle, String gameDescription, String[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, byte[][] galleryImages, String gameFilePath) {
+    // used for DB selectAll
+    public Game(int gameID, int userID, String gameTitle, String gameDescription, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, String gameFilePath) {
         this.gameID = gameID;
+        this.userID = userID;
+        this.gameTitle = gameTitle;
+        this.gameDescription = gameDescription;
+        this.gamePrice = gamePrice;
+        this.releaseDate = releaseDate;
+        this.released = released;
+        this.coverArt = coverArt;
+        this.gameFilePath = gameFilePath;
+    }
+
+    public Game(int gameID, int userID, String gameTitle, String gameDescription, String[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, byte[][] galleryImages, String gameFilePath) {
+        this.gameID = gameID;
+        this.userID = userID;
         this.gameTitle = gameTitle;
         this.gameDescription = gameDescription;
         this.gameTags = gameTags;
@@ -70,6 +86,14 @@ public class Game implements Serializable {
 
     public void setGameID(int gameID) {
         this.gameID = gameID;
+    }
+
+    public int getUserID() {
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public String getGameTitle() {
