@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.sql.Date;
 import java.util.LinkedHashMap;
 import javax.naming.NamingException;
@@ -30,8 +29,8 @@ public class GameDA {
         PreparedStatement ps = null;
 
         String query
-                = "INSERT INTO games (game_id, user_id, title, description, price, release_date, released, coverart, game_filepath) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                = "INSERT INTO games (user_id, title, description, price, release_date, released, coverart, game_filepath) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         ps = connection.prepareStatement(query);
 
@@ -39,16 +38,14 @@ public class GameDA {
         Blob coverArtBlob = connection.createBlob();
         coverArtBlob.setBytes(1, game.getCoverArt());
 
-        // this needs to be setObject because setInt won't accept null
-        ps.setObject(1, game.getGameID());
-        ps.setInt(2, game.getUserID());
-        ps.setString(3, game.getGameTitle());
-        ps.setString(4, game.getGameDescription());
-        ps.setDouble(5, game.getGamePrice());
-        ps.setDate(6, Date.valueOf(game.getReleaseDate()));
-        ps.setBoolean(7, game.isReleased());
-        ps.setBlob(8, coverArtBlob);
-        ps.setString(9, game.getGameFilePath());
+        ps.setInt(1, game.getUserID());
+        ps.setString(2, game.getGameTitle());
+        ps.setString(3, game.getGameDescription());
+        ps.setDouble(4, game.getGamePrice());
+        ps.setDate(5, Date.valueOf(game.getReleaseDate()));
+        ps.setBoolean(6, game.isReleased());
+        ps.setBlob(7, coverArtBlob);
+        ps.setString(8, game.getGameFilePath());
 
         int rows = ps.executeUpdate();
 
@@ -178,9 +175,151 @@ public class GameDA {
         return game;
     }
 
-    // Tags
-    
-    
-
     // Gallery Images
+    public static int insertGalleryImages(int gameID, byte[][] images)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+
+        String query
+                = "INSERT INTO gallery_images (game_id, image) "
+                + "VALUES (?, ?)";
+
+        ps = connection.prepareStatement(query);
+
+        for (byte[] image : images) {
+
+            Blob imageBlob = connection.createBlob();
+            imageBlob.setBytes(1, image);
+
+            ps.setInt(1, gameID);
+
+            ps.setBlob(2, imageBlob);
+
+            ps.addBatch();
+        }
+
+        int[] rows = ps.executeBatch();
+
+        ps.close();
+        pool.freeConnection(connection);
+
+        return rows.length;
+    }
+
+    public static int deleteGalleryImage(int galleryImageID)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+
+        String query
+                = "DELETE FROM gallery_images "
+                + "WHERE gallery_image_id = ?";
+
+        ps = connection.prepareStatement(query);
+
+        ps.setInt(1, galleryImageID);
+
+        int rows = ps.executeUpdate();
+
+        ps.close();
+        pool.freeConnection(connection);
+
+        return rows;
+    }
+
+    public static int deleteGameGalleryImages(int gameID)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+
+        String query
+                = "DELETE FROM gallery_images "
+                + "WHERE game_id = ?";
+
+        ps = connection.prepareStatement(query);
+
+        ps.setInt(1, gameID);
+
+        int rows = ps.executeUpdate();
+
+        ps.close();
+        pool.freeConnection(connection);
+
+        return rows;
+    }
+
+    public static byte[] selectGalleryImage(int galleryImageID)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query
+                = "SELECT image "
+                + "FROM gallery_images "
+                + "WHERE gallery_image_id = ?";
+
+        ps = connection.prepareStatement(query);
+
+        ps.setInt(1, galleryImageID);
+
+        rs = ps.executeQuery();
+
+        byte[] image = null;
+
+        if (rs.next()) {
+            image = rs.getBytes("image");
+        }
+
+        rs.close();
+        ps.close();
+        pool.freeConnection(connection);
+
+        return image;
+    }
+
+    public static LinkedHashMap<Integer, byte[]> selectAllGameGalleryImages(int gameID)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query
+                = "SELECT gallery_image_id, image "
+                + "FROM gallery_images "
+                + "WHERE game_id = ?";
+
+        ps = connection.prepareStatement(query);
+
+        ps.setInt(1, gameID);
+
+        rs = ps.executeQuery();
+
+        LinkedHashMap<Integer, byte[]> images = new LinkedHashMap<>();
+
+        while (rs.next()) {
+
+            int galleryImageID = rs.getInt("gallery_image_id");
+            byte[] image = rs.getBytes("image");
+
+            images.put(galleryImageID, image);
+        }
+
+        rs.close();
+        ps.close();
+        pool.freeConnection(connection);
+
+        return images;
+    }
 }

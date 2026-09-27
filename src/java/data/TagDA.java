@@ -26,14 +26,12 @@ public class TagDA {
         PreparedStatement ps = null;
 
         String query
-                = "INSERT INTO tags (tag_id, tag_name) "
-                + "VALUES (?, ?)";
+                = "INSERT INTO tags (tag_name) "
+                + "VALUES (?)";
 
         ps = connection.prepareStatement(query);
 
-        // this needs to be setObject because setInt won't accept null
-        ps.setObject(1, null);
-        ps.setString(2, tag.getTagName());
+        ps.setString(1, tag.getTagName());
 
         int rows = ps.executeUpdate();
 
@@ -139,15 +137,13 @@ public class TagDA {
         PreparedStatement ps = null;
 
         String query
-                = "INSERT INTO game_tags (game_tag_id, game_id, tag_id) "
-                + "VALUES (?, ?, ?)";
+                = "INSERT INTO game_tags (game_id, tag_id) "
+                + "VALUES (?, ?)";
 
         ps = connection.prepareStatement(query);
 
-        // this needs to be setObject because setInt won't accept null
-        ps.setObject(1, null);
-        ps.setInt(2, gameID);
-        ps.setInt(3, tagID);
+        ps.setInt(1, gameID);
+        ps.setInt(2, tagID);
 
         int rows = ps.executeUpdate();
 

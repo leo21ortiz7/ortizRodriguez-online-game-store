@@ -26,16 +26,14 @@ public class UserDA {
         PreparedStatement ps = null;
 
         String query
-                = "INSERT INTO users (user_id, username, email, password) "
-                + "VALUES (?, ?, ?, ?)";
+                = "INSERT INTO users (username, email, password) "
+                + "VALUES (?, ?, ?)";
 
         ps = connection.prepareStatement(query);
 
-        //this needs to be setObject because setInt won't accept null
-        ps.setObject(1, user.getUserID());
-        ps.setString(2, user.getUsername());
-        ps.setString(3, user.getEmail());
-        ps.setString(4, user.getPassword());
+        ps.setString(1, user.getUsername());
+        ps.setString(2, user.getEmail());
+        ps.setString(3, user.getPassword());
 
         int rows = ps.executeUpdate();
 
@@ -154,16 +152,13 @@ public class UserDA {
         PreparedStatement ps = null;
 
         String query
-                = "INSERT INTO user_roles (role_id, user_id, role) "
-                + "VALUES (?, ?, ?)";
+                = "INSERT INTO user_roles (user_id, role) "
+                + "VALUES (?, ?)";
 
         ps = connection.prepareStatement(query);
 
-        //Because we're sending a null value to tell the DB to take the autoID
-        //this needs to be setObject because setInt won't accept null
-        ps.setObject(1, role.getRoleID());
-        ps.setInt(2, role.getUserID());
-        ps.setString(3, role.getRoleName());
+        ps.setInt(1, role.getUserID());
+        ps.setString(2, role.getRoleName());
 
         int rows = ps.executeUpdate();
 
