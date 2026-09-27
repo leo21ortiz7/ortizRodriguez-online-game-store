@@ -6,6 +6,7 @@ package business;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 
 /**
  *
@@ -15,18 +16,18 @@ public class Game implements Serializable {
     private int gameID, userID;
     private String gameTitle;
     private String gameDescription;
-    private String[] gameTags;
+    private Tag[] gameTags;
     private double gamePrice;
     private LocalDate releaseDate;
     private boolean released;
     private byte[] coverArt;
-    private byte[][] galleryImages;
+    private LinkedHashMap<Integer, byte[]> galleryImages;
     private String gameFilePath;
 
     public Game() {
     }
 
-    public Game(int userID, String gameTitle, String gameDescription, String[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, byte[][] galleryImages) {
+    public Game(int userID, String gameTitle, String gameDescription, Tag[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, LinkedHashMap<Integer, byte[]> galleryImages) {
         this.userID = userID;
         this.gameTitle = gameTitle;
         this.gameDescription = gameDescription;
@@ -38,7 +39,7 @@ public class Game implements Serializable {
         this.galleryImages = galleryImages;
     }
 
-    public Game(int gameID, int userID, String gameTitle, String gameDescription, String[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, byte[][] galleryImages) {
+    public Game(int gameID, int userID, String gameTitle, String gameDescription, Tag[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, LinkedHashMap<Integer, byte[]> galleryImages) {
         this.gameID = gameID;
         this.userID = userID;
         this.gameTitle = gameTitle;
@@ -64,7 +65,7 @@ public class Game implements Serializable {
         this.gameFilePath = gameFilePath;
     }
 
-    public Game(int gameID, int userID, String gameTitle, String gameDescription, String[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, byte[][] galleryImages, String gameFilePath) {
+    public Game(int gameID, int userID, String gameTitle, String gameDescription, Tag[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, LinkedHashMap<Integer, byte[]> galleryImages, String gameFilePath) {
         this.gameID = gameID;
         this.userID = userID;
         this.gameTitle = gameTitle;
@@ -112,11 +113,11 @@ public class Game implements Serializable {
         this.gameDescription = gameDescription;
     }
 
-    public String[] getGameTags() {
+    public Tag[] getGameTags() {
         return gameTags;
     }
 
-    public void setGameTags(String[] gameTags) {
+    public void setGameTags(Tag[] gameTags) {
         this.gameTags = gameTags;
     }
     
@@ -154,11 +155,11 @@ public class Game implements Serializable {
         this.coverArt = coverArt;
     }
 
-    public byte[][] getGalleryImages() {
+    public LinkedHashMap<Integer, byte[]> getGalleryImages() {
         return galleryImages;
     }
 
-    public void setGalleryImagePaths(byte[][] galleryImages) {
+    public void setGalleryImagePaths(LinkedHashMap<Integer, byte[]> galleryImages) {
         this.galleryImages = galleryImages;
     }
 
