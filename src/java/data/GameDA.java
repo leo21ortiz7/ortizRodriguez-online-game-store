@@ -46,7 +46,10 @@ public class GameDA {
         ps.setBoolean(6, game.isReleased());
         ps.setBlob(7, coverArtBlob);
         ps.setString(8, game.getGameFilePath());
-
+        
+        // tags and gallery images must be inserted outside this method
+        // to retreive game_id set by DB
+        
         int rows = ps.executeUpdate();
 
         ps.close();

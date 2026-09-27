@@ -153,6 +153,34 @@ public class TagDA {
         return rows;
 
     }
+    
+    public static int insertGameTags(int gameID, Tag[] tags) throws NamingException, SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+
+        String query
+                = "INSERT INTO game_tags (game_id, tag_id) "
+                + "VALUES (?, ?)";
+
+        ps = connection.prepareStatement(query);
+
+        for(Tag tag : tags) {
+        
+            ps.setInt(1, gameID);
+            ps.setInt(2, tag.getTagID());
+            
+            ps.addBatch();
+        }
+
+        int rows = ps.executeUpdate();
+
+        ps.close();
+        pool.freeConnection(connection);
+
+        return rows;
+
+    }
 
     public static int deleteGameTag(int gameID, int tagID)
             throws NamingException, SQLException {
