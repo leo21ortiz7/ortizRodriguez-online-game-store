@@ -47,6 +47,7 @@ public class GameDA {
 
         // tags and gallery images must be inserted outside this method
         // to retreive game_id set by DB
+        
         int rows = ps.executeUpdate();
 
         ps.close();
