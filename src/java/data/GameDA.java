@@ -5,6 +5,7 @@
 package data;
 
 import business.Game;
+import business.Tag;
 import java.sql.Blob;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -132,7 +133,7 @@ public class GameDA {
             Game game = new Game(gameID, userID, gameTitle, gameDescription, gamePrice, releaseDate, released, coverArt, gameFilePath);
 
             // TODO: insert tags and gallery images to game
-            games.put((int) game.getGameID(), game);
+            games.put(game.getGameID(), game);
         }
 
         rs.close();
@@ -178,6 +179,7 @@ public class GameDA {
     }
 
     // Tags
+    
     
 
     // Gallery Images
