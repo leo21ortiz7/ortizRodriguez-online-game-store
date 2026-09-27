@@ -46,10 +46,9 @@ public class GameDA {
         ps.setBoolean(6, game.isReleased());
         ps.setBlob(7, coverArtBlob);
         ps.setString(8, game.getGameFilePath());
-        
+
         // tags and gallery images must be inserted outside this method
         // to retreive game_id set by DB
-        
         int rows = ps.executeUpdate();
 
         ps.close();
@@ -226,6 +225,31 @@ public class GameDA {
         ps = connection.prepareStatement(query);
 
         ps.setInt(1, galleryImageID);
+
+        int rows = ps.executeUpdate();
+
+        ps.close();
+        pool.freeConnection(connection);
+
+        return rows;
+    }
+
+    public static int updateGalleryImage(int galleryImageID, byte[] image)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+
+        String query
+                = "UPDATE gallery_images "
+                + "SET image = ? "
+                + "WHERE gallery_image_id = ?";
+
+        ps = connection.prepareStatement(query);
+
+        ps.setBytes(1, image);
+        ps.setInt(2, galleryImageID);
 
         int rows = ps.executeUpdate();
 
