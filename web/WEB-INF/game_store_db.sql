@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Sep 23, 2026 at 08:11 PM
+-- Generation Time: Sep 27, 2026 at 10:59 PM
 -- Server version: 9.6.0
 -- PHP Version: 8.3.26
 
@@ -87,7 +87,7 @@ CREATE TABLE `orders` (
   `order_id` int NOT NULL,
   `user_id` int NOT NULL,
   `game_id` int NOT NULL,
-  `order_date` int NOT NULL
+  `order_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
