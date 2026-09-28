@@ -47,7 +47,6 @@ public class GameDA {
 
         // tags and gallery images must be inserted outside this method
         // to retreive game_id set by DB
-        
         int rows = ps.executeUpdate();
 
         ps.close();
@@ -125,7 +124,7 @@ public class GameDA {
             Double gamePrice = rs.getDouble("price");
             LocalDate releaseDate = rs.getDate("release_date").toLocalDate();
             Boolean released = rs.getBoolean("released");
-            byte[] coverArt = rs.getBlob("coverart").getBytes(1, (int) rs.getBlob("coverart").length());
+            byte[] coverArt = rs.getBytes("coverart");
             String gameFilePath = rs.getString("game_filepath");
 
             Game game = new Game(gameID, userID, gameTitle, gameDescription, gamePrice, releaseDate, released, coverArt, gameFilePath);
@@ -161,9 +160,10 @@ public class GameDA {
             String gameTitle = rs.getString("title");
             String gameDescription = rs.getString("description");
             Double gamePrice = rs.getDouble("price");
-            LocalDate releaseDate = rs.getDate("release_date").toLocalDate();
+            LocalDate releaseDate = rs.getDate("release_date") != null
+                    ? rs.getDate("release_date").toLocalDate() : null;
             Boolean released = rs.getBoolean("released");
-            byte[] coverArt = rs.getBlob("coverart").getBytes(1, (int) rs.getBlob("coverart").length());
+            byte[] coverArt = rs.getBytes("coverart");
             String gameFilePath = rs.getString("game_filepath");
 
             game = new Game(gameID, userID, gameTitle, gameDescription, gamePrice, releaseDate, released, coverArt, gameFilePath);
@@ -348,4 +348,11 @@ public class GameDA {
 
         return images;
     }
+
+    // Carts
+    
+
+    // Wishlists
+    
+    
 }

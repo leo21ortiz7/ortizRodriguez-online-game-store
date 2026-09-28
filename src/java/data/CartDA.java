@@ -12,8 +12,12 @@ import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import javax.naming.NamingException;
 
+/**
+ *
+ * @author leo21
+ */
 public class CartDA {
-
+    
     public static int insertCartGame(int userID, int gameID)
             throws NamingException, SQLException {
 
@@ -80,7 +84,7 @@ public class CartDA {
         ps.setInt(1, cartGameID);
 
         rs = ps.executeQuery();
-        
+
         Game game = null;
 
         if (rs.next()) {
@@ -92,10 +96,55 @@ public class CartDA {
                     rs.getString("description"),
                     rs.getDouble("price"),
                     rs.getDate("release_date") != null
-                    ? rs.getDate("release_date").toLocalDate()
-                    : null,
+                    ? rs.getDate("release_date").toLocalDate() : null,
                     rs.getBoolean("released"),
-                    rs.getBlob("coverart").getBytes(1, (int) rs.getBlob("coverart").length()),
+                    rs.getBytes("coverart"),
+                    rs.getString("game_filepath")
+            );
+        }
+
+        rs.close();
+        ps.close();
+        pool.freeConnection(connection);
+
+        return game;
+    }
+
+    public static Game selectCartGame(int userID, int gameID)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query
+                = "SELECT g.* "
+                + "FROM cart_games c "
+                + "JOIN games g ON c.game_id = g.game_id "
+                + "WHERE c.user_id = ? AND c.game_id = ?";
+
+        ps = connection.prepareStatement(query);
+
+        ps.setInt(1, userID);
+        ps.setInt(2, gameID);
+
+        rs = ps.executeQuery();
+
+        Game game = null;
+
+        if (rs.next()) {
+
+            game = new Game(
+                    rs.getInt("game_id"),
+                    rs.getInt("user_id"),
+                    rs.getString("title"),
+                    rs.getString("description"),
+                    rs.getDouble("price"),
+                    rs.getDate("release_date") != null
+                    ? rs.getDate("release_date").toLocalDate() : null,
+                    rs.getBoolean("released"),
+                    rs.getBytes("coverart"),
                     rs.getString("game_filepath")
             );
         }
@@ -140,10 +189,9 @@ public class CartDA {
                     rs.getString("description"),
                     rs.getDouble("price"),
                     rs.getDate("release_date") != null
-                    ? rs.getDate("release_date").toLocalDate()
-                    : null,
+                    ? rs.getDate("release_date").toLocalDate() : null,
                     rs.getBoolean("released"),
-                    rs.getBlob("coverart").getBytes(1, (int) rs.getBlob("coverart").length()),
+                    rs.getBytes("coverart"),
                     rs.getString("game_filepath")
             );
 
@@ -187,10 +235,9 @@ public class CartDA {
                     rs.getString("description"),
                     rs.getDouble("price"),
                     rs.getDate("release_date") != null
-                    ? rs.getDate("release_date").toLocalDate()
-                    : null,
+                    ? rs.getDate("release_date").toLocalDate() : null,
                     rs.getBoolean("released"),
-                    rs.getBlob("coverart").getBytes(1, (int) rs.getBlob("coverart").length()),
+                    rs.getBytes("coverart"),
                     rs.getString("game_filepath")
             );
 
