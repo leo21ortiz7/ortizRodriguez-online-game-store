@@ -13,5 +13,29 @@
     </head>
     <body>
         <h1>Register</h1>
+        
+        <form action="Public" method="post" class="register">
+            <input type="hidden" name="action" value="register">
+            <div class="input_container">
+                <label>Username: </label>
+                <input type="text" name="username" value="${username}">
+            </div>
+            <div class="input_container">
+                <label>Email: </label>
+                <input type="text" name="email" value="${email}">
+            </div>
+            <div class="input_container">
+                <label>Password: </label>
+                <input type="text" name="password" value="${password}">
+            </div>
+            <div class="errors">
+                <ul>
+                    <c:forEach items="${errors}" var="error">
+                        <li>${error}</li>
+                    </c:forEach>
+                </ul>
+            </div>
+            <input type="submit" value="Register">
+        </form>
     </body>
 </html>
