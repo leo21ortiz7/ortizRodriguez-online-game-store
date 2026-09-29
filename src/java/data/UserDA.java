@@ -69,7 +69,7 @@ public class UserDA {
         return rows;
 
     }
-    
+
     public static int delete(User user) throws NamingException, SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
@@ -77,9 +77,9 @@ public class UserDA {
 
         String query = "DELETE FROM User "
                 + "WHERE user_id = ?";
-        
+
         ps = connection.prepareStatement(query);
-        
+
         ps.setInt(1, user.getUserID());
 
         return ps.executeUpdate();
@@ -168,7 +168,30 @@ public class UserDA {
         return rows;
 
     }
-    
+
+    public static int deleteRole(int roleID)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+
+        String query
+                = "DELETE FROM user_roles "
+                + "WHERE role_id = ?";
+
+        ps = connection.prepareStatement(query);
+
+        ps.setInt(1, roleID);
+
+        int rows = ps.executeUpdate();
+
+        ps.close();
+        pool.freeConnection(connection);
+
+        return rows;
+    }
+
     public static LinkedHashMap<Integer, Role> selectAllRoles() throws NamingException, SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
@@ -198,27 +221,27 @@ public class UserDA {
 
     }
 
-    public static LinkedHashMap<Integer, Role> selectUserRoles(int roleUserID) throws NamingException, SQLException {
+    public static LinkedHashMap<String, Role> selectUserRoles(int roleUserID) throws NamingException, SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         String query = "SELECT * FROM user_roles"
-                    + "WHERE user_id = ?";
+                + "WHERE user_id = ?";
 
         ps = connection.prepareStatement(query);
         ps.setInt(1, roleUserID);
 
         rs = ps.executeQuery();
 
-        LinkedHashMap<Integer, Role> roles = new LinkedHashMap<>();
+        LinkedHashMap<String, Role> roles = new LinkedHashMap<>();
         while (rs.next()) {
             Integer roleID = rs.getInt("role_id");
             Integer userID = rs.getInt("user_id");
             String roleName = rs.getString("role");
             Role role = new Role(roleID, userID, roleName);
-            roles.put(role.getRoleID(), role);
+            roles.put(role.getRoleName(), role);
         }
 
         rs.close();
@@ -228,7 +251,5 @@ public class UserDA {
         return roles;
 
     }
-
-    
 
 }
