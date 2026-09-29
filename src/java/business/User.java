@@ -5,6 +5,7 @@
 package business;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  *
@@ -63,4 +64,40 @@ public class User implements Serializable{
         this.password = password;
     }
     
+    // Validation methods
+    public static ArrayList<String> validateEmail(String email) {
+        ArrayList<String> errors = new ArrayList<>();
+
+        if (email == null || email.trim().isEmpty()) {
+            errors.add("Email is required.");
+        }
+
+        if (email.length() < 5) {
+            errors.add("Email must be more than 5 characters.");
+        }
+
+        if (email.contains("@") == false) {
+            errors.add("Email must contain @ symbol.");
+        }
+
+        if (email.indexOf(".") <= email.indexOf("@")) {
+            errors.add("Email must contain a period after the @ symbol.");
+        }
+
+        return errors;
+    }
+
+    public static ArrayList<String> validatePassword(String password) {
+        ArrayList<String> errors = new ArrayList<>();
+
+        if (password == null || password.trim().isEmpty()) {
+            errors.add("Password is required.");
+        }
+
+        if (password.length() < 10) {
+            errors.add("Password must be more than 10 characters.");
+        }
+
+        return errors;
+    }
 }

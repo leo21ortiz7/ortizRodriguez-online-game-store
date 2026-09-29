@@ -79,8 +79,6 @@ public class Game implements Serializable {
         this.gameFilePath = gameFilePath;
     }
 
-    
-
     public int getGameID() {
         return gameID;
     }
@@ -171,8 +169,5 @@ public class Game implements Serializable {
         this.gameFilePath = gameFilePath;
     }
 
-    
-    
-    
     
 }

@@ -348,11 +348,4 @@ public class GameDA {
 
         return images;
     }
-
-    // Carts
-    
-
-    // Wishlists
-    
-    
 }
