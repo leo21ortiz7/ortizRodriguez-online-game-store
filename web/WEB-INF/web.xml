@@ -12,6 +12,10 @@
         <servlet-name>Public</servlet-name>
         <servlet-class>controller.Public</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>User</servlet-name>
+        <servlet-class>controller.User</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Developer</servlet-name>
         <url-pattern>/Developer</url-pattern>
@@ -24,6 +28,10 @@
         <servlet-name>Public</servlet-name>
         <url-pattern>/Public</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>User</servlet-name>
+        <url-pattern>/User</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
@@ -32,6 +40,4 @@
     <welcome-file-list>
         <welcome-file>Public</welcome-file>
     </welcome-file-list>
-    
-    
 </web-app>
