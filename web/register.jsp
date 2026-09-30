@@ -49,5 +49,10 @@
 
             <input type="submit" value="Register">
         </form>
+        <br>
+        <form action="Public" method="post">
+            <input type="hidden" name="action" value="viewLogin">
+            <input type="submit" value="Login with Existing User">
+        </form>
     </body>
 </html>

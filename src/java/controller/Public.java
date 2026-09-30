@@ -70,6 +70,24 @@ public class Public extends HttpServlet {
 
                 String username = request.getParameter("username");
                 String password = request.getParameter("password");
+                
+                try {
+                    User user = UserDA.selectUser(username);
+
+                    if (user == null || !password.equals(user.getPassword())) {
+                        request.setAttribute("message", "invalid credentials");
+                    } else {
+                        session.setAttribute("loggedInUser", user);
+                        request.setAttribute("message", "Successfull Login!");
+                        //this forwards to the private controller with an action value
+                        //url = "/Private?action=gotoProfile";
+                    }
+
+                } catch (NamingException | SQLException ex) {
+                    errors.add("Database down. Try again later.");
+                    LOG.log(Level.SEVERE, "*** Server down", ex);
+                }
+                
                 break;
             }
             case "register": {
@@ -90,12 +108,14 @@ public class Public extends HttpServlet {
                     UserDA.insertRole(userRole);
                 } 
                 catch (SQLException | NamingException ex) {
-                    LOG.log(Level.SEVERE, "INSERT ROLE ERROR", ex);
+                    LOG.log(Level.SEVERE, null, ex);
                 }
                 break;
             }
 
         }
+        
+        request.setAttribute("errors", errors);
 
         getServletContext().getRequestDispatcher(url).forward(request, response);
 
