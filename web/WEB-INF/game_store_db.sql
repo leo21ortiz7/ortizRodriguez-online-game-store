@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Sep 27, 2026 at 10:59 PM
+-- Generation Time: Sep 30, 2026 at 07:56 PM
 -- Server version: 9.6.0
 -- PHP Version: 8.3.26
 
@@ -114,6 +114,22 @@ CREATE TABLE `users` (
   `password` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `username`, `email`, `password`) VALUES
+(2, 'tuser', 'tmail', 'tpass'),
+(3, 't3user', 't3mail', 't3pass'),
+(4, 't4user', 't4mail', 't4pass'),
+(5, 't5user', 't5mail', 't5pass'),
+(6, 't6', 't6', 't6'),
+(7, 't7', 't7', 't7'),
+(8, 't8', 't', '8'),
+(9, 't9', 't9', 't9'),
+(10, 't10', 't10', 't10'),
+(11, 't11', 't11', 't11');
+
 -- --------------------------------------------------------
 
 --
@@ -123,7 +139,7 @@ CREATE TABLE `users` (
 CREATE TABLE `user_roles` (
   `role_id` int NOT NULL,
   `user_id` int NOT NULL,
-  `role` int NOT NULL
+  `role` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -251,7 +267,7 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `user_roles`
