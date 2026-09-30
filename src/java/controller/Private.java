@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author leo21
  */
-public class User extends HttpServlet {
+public class Private extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

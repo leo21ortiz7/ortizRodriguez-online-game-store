@@ -4,6 +4,9 @@
  */
 package controller;
 
+import business.Role;
+import business.User;
+import data.UserDA;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -32,6 +35,8 @@ public class Public extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private static final Logger LOG = Logger.getLogger(Public.class.getName());
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -43,14 +48,51 @@ public class Public extends HttpServlet {
         ArrayList errors = new ArrayList();
 
         if (action == null) {
-            action = "goToCatalog";
+            action = "viewLogin";
         }
 
         switch (action) {
-            case "goToCatalog": {
+            case "viewLogin": {
+                url = "/login.jsp";
+                break;
+            }
+            case "viewRegister": {
+                url = "/register.jsp";
+                break;
+            }
+            case "viewCatalog": {
                 url = "/catalog.jsp";
-                
-                
+                break;
+            }
+
+            case "login": {
+                url = "/login.jsp";
+
+                String username = request.getParameter("username");
+                String password = request.getParameter("password");
+                break;
+            }
+            case "register": {
+                url = "/register.jsp";
+
+                try {
+                    String username = request.getParameter("username");
+                    String email = request.getParameter("email");
+                    String password = request.getParameter("password");
+                    String role = request.getParameter("role");
+                    
+                    User user = new User(username, email, password);
+                    
+                    UserDA.insertUser(user);
+                    user = UserDA.selectUser(user.getUsername());
+                    
+                    Role userRole = new Role(user.getUserID(), role);
+                    UserDA.insertRole(userRole);
+                } 
+                catch (SQLException | NamingException ex) {
+                    LOG.log(Level.SEVERE, "INSERT ROLE ERROR", ex);
+                }
+                break;
             }
 
         }

@@ -31,7 +31,7 @@
         </form>
         <br>
         <form action="Public" method="post">
-            <input type="hidden" name="action" value="goToRegister">
+            <input type="hidden" name="action" value="viewRegister">
             <input type="submit" value="Register New User">
         </form>
     </body>

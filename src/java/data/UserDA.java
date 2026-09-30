@@ -124,10 +124,39 @@ public class UserDA {
         String query = "";
 
         query = "SELECT * FROM users "
-                + "WHERE user_id = ?;";
+                + "WHERE user_id = ?";
 
         ps = connection.prepareStatement(query);
         ps.setInt(1, userID);
+        rs = ps.executeQuery();
+        User user = null;
+        if (rs.next()) {
+            user = new User();
+            user.setUserID(rs.getInt("user_id"));
+            user.setUsername(rs.getString("username"));
+            user.setEmail(rs.getString("email"));
+            user.setPassword(rs.getString("password"));
+        }
+
+        rs.close();
+        ps.close();
+        pool.freeConnection(connection);
+
+        return user;
+    }
+    
+    public static User selectUser(String username) throws NamingException, SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String query = "";
+
+        query = "SELECT * FROM users "
+                + "WHERE username = ?";
+
+        ps = connection.prepareStatement(query);
+        ps.setString(1, username);
         rs = ps.executeQuery();
         User user = null;
         if (rs.next()) {
