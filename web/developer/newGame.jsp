@@ -4,6 +4,7 @@
     Author     : leo21
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -37,9 +38,8 @@
     <body>
         <h1>New Game</h1>
 
-        <form action="postNewGame"
-              method="post"
-              enctype="multipart/form-data">
+        <form action="Developer" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="postNewGame">
 
             <!-- Game Title -->
             <label for="title">Game Title:</label>
@@ -118,13 +118,12 @@
             </div>
 
             <!-- Game File -->
-            <!--            <label for="game_filepath">Game File:</label>
-                        <input type="file"
-                               id="game_filepath"
-                               name="game_filepath"
-                               accept=".zip"
-                               required>
-                        <br><br>-->
+            <label for="game_filepath">Game File:</label>
+            <input type="file"
+                   id="game_filepath"
+                   name="game_filepath"
+                   accept=".zip">
+            <br><br>
 
             <input type="submit" value="Create Game">
 
