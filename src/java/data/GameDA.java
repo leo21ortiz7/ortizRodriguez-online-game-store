@@ -210,6 +210,36 @@ public class GameDA {
         return rows.length;
     }
 
+    public static int insertGalleryImage(int gameID, byte[] image)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+
+        String query
+                = "INSERT INTO gallery_images (game_id, image) "
+                + "VALUES (?, ?)";
+
+        ps = connection.prepareStatement(query);
+
+        Blob imageBlob = connection.createBlob();
+        imageBlob.setBytes(1, image);
+
+        ps.setInt(1, gameID);
+
+        ps.setBlob(2, imageBlob);
+
+        ps.addBatch();
+
+        int[] rows = ps.executeBatch();
+
+        ps.close();
+        pool.freeConnection(connection);
+
+        return rows.length;
+    }
+
     public static int deleteGalleryImage(int galleryImageID)
             throws NamingException, SQLException {
 

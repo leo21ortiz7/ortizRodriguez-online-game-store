@@ -56,10 +56,12 @@ public class Public extends HttpServlet {
                 url = "/login.jsp";
                 break;
             }
+            
             case "viewRegister": {
                 url = "/register.jsp";
                 break;
             }
+            
             case "viewCatalog": {
                 url = "/catalog.jsp";
                 break;
@@ -79,17 +81,21 @@ public class Public extends HttpServlet {
                     } else {
                         session.setAttribute("myUser", user);
                         request.setAttribute("message", "Successfull Login!");
+                        
+                        url = "/Public?action=viewCatalog";
+                        
                         //this forwards to the private controller with an action value
                         //url = "/Private?action=gotoProfile";
                     }
 
                 } catch (NamingException | SQLException ex) {
                     errors.add("Server down. Try again later.");
-                    LOG.log(Level.SEVERE, "*** Server down", ex);
+                    LOG.log(Level.SEVERE, "*** Server Error", ex);
                 }
                 
                 break;
             }
+            
             case "register": {
                 url = "/register.jsp";
 
@@ -108,10 +114,12 @@ public class Public extends HttpServlet {
                     UserDA.insertRole(userRole);
                 } 
                 catch (SQLException | NamingException ex) {
-                    LOG.log(Level.SEVERE, null, ex);
+                    errors.add("Server down. Try again later.");
+                    LOG.log(Level.SEVERE, "*** Server Error", ex);
                 }
                 break;
             }
+            
 
         }
         

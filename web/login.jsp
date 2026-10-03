@@ -4,6 +4,7 @@
     Author     : leo21
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -27,7 +28,7 @@
             <div class="errors">
                 ${message}
             </div>
-            <c:if test="${errors.length > 0}">
+            <c:if test="${!errors.isEmpty()}">
                 <div class="errors">
                     <ul>
                         <c:forEach items="${errors}" var="error">
