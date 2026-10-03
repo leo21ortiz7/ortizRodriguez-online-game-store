@@ -7,6 +7,29 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
+    <style>
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag-checkbox {
+            display: none;
+        }
+
+        .tag-label {
+            padding: 8px 14px;
+            border: 1px solid #999;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .tag-checkbox:checked + .tag-label {
+            background-color: #333;
+            color: white;
+        }
+    </style>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
@@ -77,6 +100,22 @@
                    name="galleryImages"
                    accept="image/jpeg,image/png"
                    multiple>
+            <br><br>
+
+            <!-- Tags -->
+            <label>Tags:</label>
+            <div class="tag-container">
+                <c:forEach var="tag" items="${tags}">
+                    <input type="checkbox"
+                           id="tag_${tag.tagID}"
+                           name="tags"
+                           value="${tag.tagID}"
+                           class="tag-checkbox">
+                    <label for="tag_${tag.tagID}" class="tag-label">
+                        ${tag.tagName}
+                    </label>
+                </c:forEach>
+            </div>
 
             <!-- Game File -->
             <!--            <label for="game_filepath">Game File:</label>
