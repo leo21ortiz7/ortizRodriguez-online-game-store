@@ -77,14 +77,14 @@ public class Public extends HttpServlet {
                     if (user == null || !password.equals(user.getPassword())) {
                         request.setAttribute("message", "invalid credentials");
                     } else {
-                        session.setAttribute("loggedInUser", user);
+                        session.setAttribute("myUser", user);
                         request.setAttribute("message", "Successfull Login!");
                         //this forwards to the private controller with an action value
                         //url = "/Private?action=gotoProfile";
                     }
 
                 } catch (NamingException | SQLException ex) {
-                    errors.add("Database down. Try again later.");
+                    errors.add("Server down. Try again later.");
                     LOG.log(Level.SEVERE, "*** Server down", ex);
                 }
                 

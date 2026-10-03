@@ -13,7 +13,7 @@
     </head>
     <body>
         <h1>Login</h1>
-        
+
         <form action="Public" method="post" class="login">
             <input type="hidden" name="action" value="login">
             <div class="input_container">
@@ -27,6 +27,15 @@
             <div class="errors">
                 ${message}
             </div>
+            <c:if test="${errors.length > 0}">
+                <div class="errors">
+                    <ul>
+                        <c:forEach items="${errors}" var="error">
+                            <li>${error}</li>
+                        </c:forEach>
+                    </ul>
+                </div>
+            </c:if>
             <input type="submit" value="login">
         </form>
         <br>
