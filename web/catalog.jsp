@@ -15,7 +15,10 @@
     <body>
         <h1>Game Store</h1>
         <div>
-            
+            <form action="Developer" method="POST">
+                <input type="hidden" name="action" value="viewNewGame">
+                <input type="submit" value="New Game"
+            </form>
         </div>
     </body>
 </html>

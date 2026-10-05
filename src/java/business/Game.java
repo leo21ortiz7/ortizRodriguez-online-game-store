@@ -26,34 +26,36 @@ public class Game implements Serializable {
 
     public Game() {
     }
-
-    public Game(int userID, String gameTitle, String gameDescription, Tag[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, LinkedHashMap<Integer, byte[]> galleryImages) {
+    
+    // DB Insert
+    public Game(int userID, 
+                String gameTitle, 
+                String gameDescription, 
+                double gamePrice, 
+                LocalDate releaseDate, 
+                boolean released, 
+                byte[] coverArt, 
+                String gameFilePath) {
         this.userID = userID;
         this.gameTitle = gameTitle;
         this.gameDescription = gameDescription;
-        this.gameTags = gameTags;
         this.gamePrice = gamePrice;
         this.releaseDate = releaseDate;
         this.released = released;
         this.coverArt = coverArt;
-        this.galleryImages = galleryImages;
+        this.gameFilePath = gameFilePath;
     }
 
-    public Game(int gameID, int userID, String gameTitle, String gameDescription, Tag[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, LinkedHashMap<Integer, byte[]> galleryImages) {
-        this.gameID = gameID;
-        this.userID = userID;
-        this.gameTitle = gameTitle;
-        this.gameDescription = gameDescription;
-        this.gameTags = gameTags;
-        this.gamePrice = gamePrice;
-        this.releaseDate = releaseDate;
-        this.released = released;
-        this.coverArt = coverArt;
-        this.galleryImages = galleryImages;
-    }
-
-    // used for DB selectAll
-    public Game(int gameID, int userID, String gameTitle, String gameDescription, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, String gameFilePath) {
+    // DB selectAll
+    public Game(int gameID, 
+                int userID, 
+                String gameTitle, 
+                String gameDescription, 
+                double gamePrice, 
+                LocalDate releaseDate, 
+                boolean released, 
+                byte[] coverArt, 
+                String gameFilePath) {
         this.gameID = gameID;
         this.userID = userID;
         this.gameTitle = gameTitle;
@@ -65,7 +67,18 @@ public class Game implements Serializable {
         this.gameFilePath = gameFilePath;
     }
 
-    public Game(int gameID, int userID, String gameTitle, String gameDescription, Tag[] gameTags, double gamePrice, LocalDate releaseDate, boolean released, byte[] coverArt, LinkedHashMap<Integer, byte[]> galleryImages, String gameFilePath) {
+    // Full
+    public Game(int gameID, 
+                int userID, 
+                String gameTitle, 
+                String gameDescription, 
+                Tag[] gameTags, 
+                double gamePrice, 
+                LocalDate releaseDate, 
+                boolean released, 
+                byte[] coverArt, 
+                LinkedHashMap<Integer, byte[]> galleryImages, 
+                String gameFilePath) {
         this.gameID = gameID;
         this.userID = userID;
         this.gameTitle = gameTitle;

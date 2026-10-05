@@ -167,7 +167,16 @@ public class GameDA {
             byte[] coverArt = rs.getBytes("coverart");
             String gameFilePath = rs.getString("game_filepath");
 
-            game = new Game(gameID, userID, gameTitle, gameDescription, gamePrice, releaseDate, released, coverArt, gameFilePath);
+            game = new Game(
+                    gameID, 
+                    userID, 
+                    gameTitle, 
+                    gameDescription, 
+                    gamePrice, 
+                    releaseDate, 
+                    released, 
+                    coverArt, 
+                    gameFilePath);
         }
 
         rs.close();
@@ -177,7 +186,9 @@ public class GameDA {
         return game;
     }
 
-    // Gallery Images
+    /*
+    * Gallery Images
+    */
     public static int insertGalleryImages(int gameID, byte[][] images)
             throws NamingException, SQLException {
 

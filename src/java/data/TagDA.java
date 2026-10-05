@@ -19,7 +19,9 @@ import javax.naming.NamingException;
  */
 public class TagDA {
 
-    // tags table
+    /*
+    * tags
+    */
     public static int insertTag(Tag tag) throws NamingException, SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
@@ -130,7 +132,9 @@ public class TagDA {
         return tags;
     }
 
-    // game_tags table
+    /*
+    * game_tags
+    */
     public static int insertGameTag(int gameID, int tagID) throws NamingException, SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
