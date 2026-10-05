@@ -9,6 +9,7 @@ import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.sql.Date;
@@ -25,16 +26,16 @@ public class GameDA {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
+        ResultSet rs = null;
 
         String query
                 = "INSERT INTO games (user_id, title, description, price, release_date, released, coverart, game_filepath) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        ps = connection.prepareStatement(query);
-
-        // convert cover art to blob
-        Blob coverArtBlob = connection.createBlob();
-        coverArtBlob.setBytes(1, game.getCoverArt());
+        ps = connection.prepareStatement(
+                query,
+                Statement.RETURN_GENERATED_KEYS
+        );
 
         ps.setInt(1, game.getUserID());
         ps.setString(2, game.getGameTitle());
@@ -42,18 +43,22 @@ public class GameDA {
         ps.setDouble(4, game.getGamePrice());
         ps.setDate(5, Date.valueOf(game.getReleaseDate()));
         ps.setBoolean(6, game.isReleased());
-        ps.setBlob(7, coverArtBlob);
+        ps.setBytes(7, game.getCoverArt());
         ps.setString(8, game.getGameFilePath());
 
-        // tags and gallery images must be inserted outside this method
-        // to retreive game_id set by DB
         int rows = ps.executeUpdate();
 
+        rs = ps.getGeneratedKeys();
+
+        if (rs.next()) {
+            game.setGameID(rs.getInt(1));
+        }
+
+        rs.close();
         ps.close();
         pool.freeConnection(connection);
 
         return rows;
-
     }
 
     public static int updateGame(
@@ -82,16 +87,12 @@ public class GameDA {
 
         ps = connection.prepareStatement(query);
 
-        // convert cover art to blob
-        Blob newCoverArtBlob = connection.createBlob();
-        newCoverArtBlob.setBytes(1, newCoverArt);
-
         ps.setString(1, newTitle);
         ps.setString(2, newDescription);
         ps.setDouble(3, newPrice);
         ps.setDate(4, Date.valueOf(newReleaseDate));
         ps.setBoolean(5, newIsReleased);
-        ps.setBlob(6, newCoverArtBlob);
+        ps.setBytes(6, newCoverArt);
         ps.setString(7, newGameFilePath);
 
         int rows = ps.executeUpdate();
