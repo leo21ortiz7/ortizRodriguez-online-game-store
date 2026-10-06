@@ -91,7 +91,7 @@ public class Developer extends HttpServlet {
                     boolean released = request.getParameter("released") != null;
 
                     double price = Double.parseDouble(priceString);
-                    LocalDate releaseDate = LocalDate.parse(releaseDateString);
+                    LocalDate releaseDate = releaseDateString.isEmpty() ? null : LocalDate.parse(releaseDateString);
 
                     // Get cover art
                     Part coverArtPart = request.getPart("coverart");
@@ -160,7 +160,7 @@ public class Developer extends HttpServlet {
 
                     request.setAttribute("message", "Game successfully created!");
 
-                    url = "/Developer?action=viewGames";
+                    url = "/Public?action=viewCatalog";
 
                 } catch (SQLException | NamingException ex) {
                     errors.add("Server down. Try again later.");

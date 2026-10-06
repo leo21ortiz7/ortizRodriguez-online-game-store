@@ -36,12 +36,15 @@ public class GameDA {
                 query,
                 Statement.RETURN_GENERATED_KEYS
         );
+        
+        // Handle possible null date
+        Date releaseDate = game.getReleaseDate() != null ? Date.valueOf(game.getReleaseDate()) : null;
 
         ps.setInt(1, game.getUserID());
         ps.setString(2, game.getGameTitle());
         ps.setString(3, game.getGameDescription());
         ps.setDouble(4, game.getGamePrice());
-        ps.setDate(5, Date.valueOf(game.getReleaseDate()));
+        ps.setDate(5, releaseDate);
         ps.setBoolean(6, game.isReleased());
         ps.setBytes(7, game.getCoverArt());
         ps.setString(8, game.getGameFilePath());
