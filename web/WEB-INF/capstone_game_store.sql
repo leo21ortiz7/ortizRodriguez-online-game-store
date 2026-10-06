@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Sep 30, 2026 at 07:56 PM
+-- Generation Time: Oct 06, 2026 at 08:50 PM
 -- Server version: 9.6.0
 -- PHP Version: 8.3.26
 
@@ -44,7 +44,7 @@ CREATE TABLE `cart_games` (
 CREATE TABLE `gallery_images` (
   `gallery_image_id` int NOT NULL,
   `game_id` int NOT NULL,
-  `image` blob NOT NULL
+  `image` mediumblob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -57,11 +57,11 @@ CREATE TABLE `games` (
   `game_id` int NOT NULL,
   `user_id` int NOT NULL,
   `title` varchar(64) NOT NULL,
-  `description` varchar(512) NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `price` double NOT NULL,
   `release_date` date DEFAULT NULL,
   `released` tinyint(1) NOT NULL,
-  `coverart` blob,
+  `coverart` mediumblob,
   `game_filepath` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -98,8 +98,26 @@ CREATE TABLE `orders` (
 
 CREATE TABLE `tags` (
   `tag_id` int NOT NULL,
-  `tag_name` varchar(16) NOT NULL
+  `tag_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `tags`
+--
+
+INSERT INTO `tags` (`tag_id`, `tag_name`) VALUES
+(1, 'Action'),
+(2, 'Adventure'),
+(3, 'Platformer'),
+(4, 'RPG'),
+(5, 'Sci-fi'),
+(6, 'Shooter'),
+(7, 'Roguelike'),
+(8, 'Simulator'),
+(9, 'Farming'),
+(10, 'Crafting'),
+(11, 'Survival'),
+(12, 'Horror');
 
 -- --------------------------------------------------------
 
@@ -119,16 +137,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `password`) VALUES
-(2, 'tuser', 'tmail', 'tpass'),
-(3, 't3user', 't3mail', 't3pass'),
-(4, 't4user', 't4mail', 't4pass'),
-(5, 't5user', 't5mail', 't5pass'),
-(6, 't6', 't6', 't6'),
-(7, 't7', 't7', 't7'),
-(8, 't8', 't', '8'),
-(9, 't9', 't9', 't9'),
-(10, 't10', 't10', 't10'),
-(11, 't11', 't11', 't11');
+(13, 'tDev', 'tDevMail', 'tPass'),
+(14, 'tcustomer', 'tCustomerMail', 'tPass');
 
 -- --------------------------------------------------------
 
@@ -141,6 +151,14 @@ CREATE TABLE `user_roles` (
   `user_id` int NOT NULL,
   `role` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `user_roles`
+--
+
+INSERT INTO `user_roles` (`role_id`, `user_id`, `role`) VALUES
+(2, 13, 'DEVELOPER'),
+(3, 14, 'CUSTOMER');
 
 -- --------------------------------------------------------
 
@@ -261,19 +279,19 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `tags`
 --
 ALTER TABLE `tags`
-  MODIFY `tag_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `tag_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `user_roles`
 --
 ALTER TABLE `user_roles`
-  MODIFY `role_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `role_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `wishlists`
