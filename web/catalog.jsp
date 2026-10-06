@@ -5,7 +5,7 @@
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -13,12 +13,10 @@
         <title>Catalog</title>
     </head>
     <body>
+        <%@include file="WEB-INF/jspf/nav.jspf" %>
         <h1>Game Store</h1>
         <div>
-            <form action="Developer" method="POST">
-                <input type="hidden" name="action" value="viewNewGame">
-                <input type="submit" value="New Game"
-            </form>
+            
         </div>
     </body>
 </html>

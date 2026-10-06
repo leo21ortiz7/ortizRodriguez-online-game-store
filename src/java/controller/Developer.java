@@ -48,7 +48,6 @@ public class Developer extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String folder = "/developer";
         String url = "";
         String action = request.getParameter("action");
 
@@ -67,17 +66,18 @@ public class Developer extends HttpServlet {
             }
             
             case "viewNewGame": {
-                url = "/newGame.jsp";
+                url = "/developer/newGame.jsp";
                 try {
                     request.setAttribute("tags", TagDA.selectAllTags());
                 } catch (SQLException | NamingException ex) {
                     errors.add("Server down. Try again later.");
                     LOG.log(Level.SEVERE, "*** Server Error", ex);
                 }
+                break;
             }
 
             case "postNewGame": {
-                url = "/newGame.jsp";
+                url = "/developer/newGame.jsp";
 
                 User myUser = (User) session.getAttribute("myUser");
 
@@ -179,6 +179,10 @@ public class Developer extends HttpServlet {
                 break;
             }
         }
+        
+        request.setAttribute("errors", errors);
+
+        getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

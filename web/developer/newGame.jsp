@@ -105,7 +105,7 @@
             <!-- Tags -->
             <label>Tags:</label>
             <div class="tag-container">
-                <c:forEach var="tag" items="${tags}">
+                <c:forEach var="tag" items="${tags.values()}">
                     <input type="checkbox"
                            id="tag_${tag.tagID}"
                            name="tags"
@@ -116,6 +116,7 @@
                     </label>
                 </c:forEach>
             </div>
+            <br><br>
 
             <!-- Game File -->
             <label for="game_filepath">Game File:</label>
