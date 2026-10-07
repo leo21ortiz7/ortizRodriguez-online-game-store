@@ -123,7 +123,8 @@
             <input type="file"
                    id="game_filepath"
                    name="game_filepath"
-                   accept=".zip">
+                   accept=".zip"
+                   required>
             <br><br>
 
             <input type="submit" value="Create Game">

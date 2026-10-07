@@ -126,7 +126,8 @@ public class GameDA {
             String gameTitle = rs.getString("title");
             String gameDescription = rs.getString("description");
             Double gamePrice = rs.getDouble("price");
-            LocalDate releaseDate = rs.getDate("release_date").toLocalDate();
+            LocalDate releaseDate = rs.getDate("release_date") != null
+                    ? rs.getDate("release_date").toLocalDate() : null;
             Boolean released = rs.getBoolean("released");
             byte[] coverArt = rs.getBytes("coverart");
             String gameFilePath = rs.getString("game_filepath");

@@ -129,7 +129,7 @@ public class Developer extends HttpServlet {
                     game = GameDA.selectGame(game.getGameID());
 
                     /*
-         * Gallery Images
+                     * Gallery Images
                      */
                     List<Part> galleryImages = request.getParts()
                             .stream()
@@ -139,11 +139,7 @@ public class Developer extends HttpServlet {
                     for (Part image : galleryImages) {
                         if (image.getSize() > 0) {
                             byte[] imageBytes = image.getInputStream().readAllBytes();
-
-                            GameDA.insertGalleryImage(
-                                    game.getGameID(),
-                                    imageBytes
-                            );
+                            GameDA.insertGalleryImage(game.getGameID(), imageBytes);
                         }
                     }
 
