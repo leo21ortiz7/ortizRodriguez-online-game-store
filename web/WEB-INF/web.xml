@@ -16,6 +16,10 @@
         <servlet-name>User</servlet-name>
         <servlet-class>controller.Private</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ImageProcess</servlet-name>
+        <servlet-class>controller.ImageProcess</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Developer</servlet-name>
         <url-pattern>/Developer</url-pattern>
@@ -31,6 +35,10 @@
     <servlet-mapping>
         <servlet-name>User</servlet-name>
         <url-pattern>/User</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImageProcess</servlet-name>
+        <url-pattern>/ImageProcess</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

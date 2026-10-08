@@ -36,7 +36,7 @@ public class GameDA {
                 query,
                 Statement.RETURN_GENERATED_KEYS
         );
-        
+
         // Handle possible null date
         Date releaseDate = game.getReleaseDate() != null ? Date.valueOf(game.getReleaseDate()) : null;
 
@@ -172,14 +172,14 @@ public class GameDA {
             String gameFilePath = rs.getString("game_filepath");
 
             game = new Game(
-                    gameID, 
-                    userID, 
-                    gameTitle, 
-                    gameDescription, 
-                    gamePrice, 
-                    releaseDate, 
-                    released, 
-                    coverArt, 
+                    gameID,
+                    userID,
+                    gameTitle,
+                    gameDescription,
+                    gamePrice,
+                    releaseDate,
+                    released,
+                    coverArt,
                     gameFilePath);
         }
 
@@ -190,9 +190,42 @@ public class GameDA {
         return game;
     }
 
+    // Cover Images
+    public static byte[] selectCoverImage(int gameID)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query
+                = "SELECT coverart "
+                + "FROM games "
+                + "WHERE game_id = ?";
+
+        ps = connection.prepareStatement(query);
+
+        ps.setInt(1, gameID);
+
+        rs = ps.executeQuery();
+
+        byte[] coverImage = null;
+
+        if (rs.next()) {
+            coverImage = rs.getBytes("coverart");
+        }
+
+        rs.close();
+        ps.close();
+        pool.freeConnection(connection);
+
+        return coverImage;
+    }
+
     /*
     * Gallery Images
-    */
+     */
     public static int insertGalleryImages(int gameID, byte[][] images)
             throws NamingException, SQLException {
 

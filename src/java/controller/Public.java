@@ -4,13 +4,16 @@
  */
 package controller;
 
+import business.Game;
 import business.Role;
 import business.User;
+import data.GameDA;
 import data.UserDA;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
@@ -51,29 +54,32 @@ public class Public extends HttpServlet {
             action = "viewLogin";
         }
 
-        switch (action) {
-            case "viewLogin": {
-                url = "/login.jsp";
-                break;
-            }
-            
-            case "viewRegister": {
-                url = "/register.jsp";
-                break;
-            }
-            
-            case "viewCatalog": {
-                url = "/catalog.jsp";
-                break;
-            }
+        try {
+            switch (action) {
+                case "viewLogin": {
+                    url = "/login.jsp";
+                    break;
+                }
 
-            case "login": {
-                url = "/login.jsp";
+                case "viewRegister": {
+                    url = "/register.jsp";
+                    break;
+                }
 
-                String username = request.getParameter("username");
-                String password = request.getParameter("password");
-                
-                try {
+                case "viewCatalog": {
+                    LinkedHashMap<Integer, Game> games = GameDA.selectAllGames();
+                    request.setAttribute("games", games);
+
+                    url = "/catalog.jsp";
+                    break;
+                }
+
+                case "login": {
+                    url = "/login.jsp";
+
+                    String username = request.getParameter("username");
+                    String password = request.getParameter("password");
+
                     User user = UserDA.selectUser(username);
 
                     if (user == null || !password.equals(user.getPassword())) {
@@ -81,48 +87,41 @@ public class Public extends HttpServlet {
                     } else {
                         session.setAttribute("myUser", user);
                         request.setAttribute("message", "Successfull Login!");
-                        
+
                         url = "/Public?action=viewCatalog";
-                        
+
                         //this forwards to the private controller with an action value
                         //url = "/Private?action=gotoProfile";
                     }
 
-                } catch (NamingException | SQLException ex) {
-                    errors.add("Server down. Try again later.");
-                    LOG.log(Level.SEVERE, "*** Server Error", ex);
+                    break;
                 }
-                
-                break;
-            }
-            
-            case "register": {
-                url = "/register.jsp";
 
-                try {
+                case "register": {
+                    url = "/register.jsp";
+
                     String username = request.getParameter("username");
                     String email = request.getParameter("email");
                     String password = request.getParameter("password");
                     String role = request.getParameter("role");
-                    
+
                     User user = new User(username, email, password);
-                    
+
                     UserDA.insertUser(user);
                     user = UserDA.selectUser(user.getUsername());
-                    
+
                     Role userRole = new Role(user.getUserID(), role);
                     UserDA.insertRole(userRole);
-                } 
-                catch (SQLException | NamingException ex) {
-                    errors.add("Server down. Try again later.");
-                    LOG.log(Level.SEVERE, "*** Server Error", ex);
-                }
-                break;
-            }
-            
 
+                    break;
+                }
+
+            }
+        } catch (SQLException | NamingException ex) {
+            errors.add("Server down. Try again later.");
+            LOG.log(Level.SEVERE, "*** Server Error", ex);
         }
-        
+
         request.setAttribute("errors", errors);
 
         getServletContext().getRequestDispatcher(url).forward(request, response);
