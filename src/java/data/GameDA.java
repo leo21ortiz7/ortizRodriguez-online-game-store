@@ -135,6 +135,8 @@ public class GameDA {
             Game game = new Game(gameID, userID, gameTitle, gameDescription, gamePrice, releaseDate, released, coverArt, gameFilePath);
 
             // TODO: insert tags and gallery images to game
+            game.setGameTags(TagDA.selectAllGameTags(gameID));
+            
             games.put(game.getGameID(), game);
         }
 

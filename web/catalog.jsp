@@ -15,22 +15,48 @@
     <body>
         <%@include file="WEB-INF/jspf/nav.jspf" %>
         <h1>Game Store</h1>
+        <!-- Search Bar 
+             Can possibly be jspf -->
+        <div>
+            <h3>Search</h3>
+            <form action="Public" method="post">
+                <input type="hidden" name="action" value="search">
+                <lable for="gameSearch">Game:</lable>
+                <input type="text" id="gameSearch" name="gameSearch">
+                <lable for="devSearch">Developer:</lable>
+                <input type="text" id="devSearch" name="devSearch"
+            </form>
+        </div>
         <div>
             <table>
                 <c:forEach items="${games}" var="game">
                     <div>
                         <tr>
                             <td>
-                                <img src="ImageProcess?gameID=${game.key}" 
-                                     width="150" 
-                                     height="200" 
-                                     alt="Cover Image"/>
+                                <a href="Private?action=viewGame&gameID=${game.key}">
+                                    <img src="ImageProcess?gameID=${game.key}" 
+                                         width="150" 
+                                         height="200" 
+                                         alt="Cover Image"/>
+                                </a>
                             </td>
                         </tr>
-                        <tr>
-                            <td>${game.value.getGameTitle()}</td>
-                        </tr>
+                        <tr><td>${game.value.getGameTitle()}</td></tr>
+                        <tr><td>${game.value.getUser().getUsername()}</td></tr>
+                        <c:if test="${!game.value.getGameTags().isEmpty()}">
+                            <tr><td>
+                                <c:forEach items="${game.value.getGameTags()}" var="tag">
+                                    <form action="Public" method="post">
+                                        <input type="hidden" name="action" value="singleTagFilter">
+                                        <input type="hidden" name="tagID" value="${tag.key}">
+                                        <input type="submit" value="${tag.value.getTagName()}"
+                                    </form>
+                                </c:forEach>
+                                </td></tr>
+                        </c:if>
+
                     </div>
+
                 </c:forEach>
             </table>
         </div>

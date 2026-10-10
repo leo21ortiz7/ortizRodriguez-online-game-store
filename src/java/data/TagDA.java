@@ -272,11 +272,9 @@ public class TagDA {
         while (rs.next()) {
 
             int tagID = rs.getInt("tag_id");
+            String tagName = rs.getString("tag_name");
 
-            Tag tag = new Tag(
-                    tagID,
-                    rs.getString("tag_name")
-            );
+            Tag tag = new Tag(tagID, tagName);
 
             tags.put(tagID, tag);
         }

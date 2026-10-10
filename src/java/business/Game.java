@@ -4,9 +4,14 @@
  */
 package business;
 
+import data.UserDA;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.NamingException;
 
 /**
  *
@@ -16,7 +21,7 @@ public class Game implements Serializable {
     private int gameID, userID;
     private String gameTitle;
     private String gameDescription;
-    private Tag[] gameTags;
+    private LinkedHashMap<Integer, Tag> gameTags;
     private double gamePrice;
     private LocalDate releaseDate;
     private boolean released;
@@ -72,7 +77,7 @@ public class Game implements Serializable {
                 int userID, 
                 String gameTitle, 
                 String gameDescription, 
-                Tag[] gameTags, 
+                LinkedHashMap<Integer, Tag> gameTags, 
                 double gamePrice, 
                 LocalDate releaseDate, 
                 boolean released, 
@@ -124,11 +129,11 @@ public class Game implements Serializable {
         this.gameDescription = gameDescription;
     }
 
-    public Tag[] getGameTags() {
+    public LinkedHashMap<Integer, Tag> getGameTags() {
         return gameTags;
     }
 
-    public void setGameTags(Tag[] gameTags) {
+    public void setGameTags(LinkedHashMap<Integer, Tag> gameTags) {
         this.gameTags = gameTags;
     }
     
@@ -182,5 +187,12 @@ public class Game implements Serializable {
         this.gameFilePath = gameFilePath;
     }
 
-    
+    public User getUser() {
+        try {
+            return UserDA.selectUser(this.userID);
+        } catch (NamingException | SQLException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }
