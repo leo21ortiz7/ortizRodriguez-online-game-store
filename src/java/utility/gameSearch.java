@@ -5,6 +5,7 @@
 package utility;
 
 import business.Game;
+import business.Tag;
 import java.util.LinkedHashMap;
 
 /**
@@ -28,6 +29,21 @@ public final class gameSearch {
                 }
             } else if (!devTerm.isBlank()) {
                 if (game.getUser().getUsername().contains(devTerm)) {
+                    newList.put(game.getGameID(), game);
+                }
+            }
+        }
+        
+        return newList;
+    }
+    
+    public static LinkedHashMap<Integer, Game> tagFilter (LinkedHashMap<Integer, Game> gameList, LinkedHashMap<Integer, Tag> filterTags) {
+        
+        LinkedHashMap<Integer, Game> newList = new LinkedHashMap<>();
+        
+        for (Game game : gameList.values()) {
+            for (Tag filterTag : filterTags.values()) {
+                if (game.getGameTags().containsKey(filterTag.getTagID())) {
                     newList.put(game.getGameID(), game);
                 }
             }
