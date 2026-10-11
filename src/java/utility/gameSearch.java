@@ -37,7 +37,7 @@ public final class gameSearch {
         return newList;
     }
     
-    public static LinkedHashMap<Integer, Game> tagFilter (LinkedHashMap<Integer, Game> gameList, LinkedHashMap<Integer, Tag> filterTags) {
+    public static LinkedHashMap<Integer, Game> tagFilterInclusive (LinkedHashMap<Integer, Game> gameList, LinkedHashMap<Integer, Tag> filterTags) {
         
         LinkedHashMap<Integer, Game> newList = new LinkedHashMap<>();
         
@@ -46,6 +46,25 @@ public final class gameSearch {
                 if (game.getGameTags().containsKey(filterTag.getTagID())) {
                     newList.put(game.getGameID(), game);
                 }
+            }
+        }
+        
+        return newList;
+    }
+    
+    public static LinkedHashMap<Integer, Game> tagFilterExclusive (LinkedHashMap<Integer, Game> gameList, LinkedHashMap<Integer, Tag> filterTags) {
+        
+        LinkedHashMap<Integer, Game> newList = new LinkedHashMap<>();
+        
+        for (Game game : gameList.values()) {
+            int matchCount = 0;
+            for (Tag filterTag : filterTags.values()) {
+                if (game.getGameTags().containsKey(filterTag.getTagID())) {
+                   matchCount++;
+                }
+            }
+            if (matchCount == filterTags.size()) {
+                newList.put(game.getGameID(), game);
             }
         }
         
