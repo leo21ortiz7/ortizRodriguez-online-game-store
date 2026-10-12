@@ -60,7 +60,7 @@
             <br><br>
 
             <!-- Price -->
-            <label for="price">Price:</label>
+            <label for="price">Price: $</label>
             <input type="number"
                    id="price"
                    name="price"

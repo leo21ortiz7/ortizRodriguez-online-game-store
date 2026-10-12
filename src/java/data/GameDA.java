@@ -136,6 +136,7 @@ public class GameDA {
 
             // TODO: insert tags and gallery images to game
             game.setGameTags(TagDA.selectAllGameTags(gameID));
+            game.setGalleryImages(selectGameGalleryImages(gameID));
             
             games.put(game.getGameID(), game);
         }
@@ -394,7 +395,7 @@ public class GameDA {
         return image;
     }
 
-    public static LinkedHashMap<Integer, byte[]> selectAllGameGalleryImages(int gameID)
+    public static LinkedHashMap<Integer, byte[]> selectGameGalleryImages(int gameID)
             throws NamingException, SQLException {
 
         ConnectionPool pool = ConnectionPool.getInstance();

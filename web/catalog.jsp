@@ -21,15 +21,16 @@
             <h3>Search</h3>
             <form action="Public" method="post">
                 <input type="hidden" name="action" value="search">
-                <lable for="gameSearch">Game:</lable>
-                <input type="text" id="gameSearch" name="gameSearch">
-                <lable for="devSearch">Developer:</lable>
-                <input type="text" id="devSearch" name="devSearch"
+                <lable for="gameTerm">Game:</lable>
+                <input type="text" id="gameTerm" name="gameTerm" value="${gameTerm}">
+                <lable for="devTerm">Developer:</lable>
+                <input type="text" id="devTerm" name="devTerm" value="${devTerm}">
+                <input type="submit" value="Search" >
             </form>
         </div>
         <div>
             <table>
-                <c:forEach items="${games}" var="game">
+                <c:forEach items="${catalog}" var="game">
                     <div>
                         <tr>
                             <td>
@@ -41,8 +42,8 @@
                                 </a>
                             </td>
                         </tr>
-                        <tr><td>${game.value.getGameTitle()}</td></tr>
-                        <tr><td>${game.value.getUser().getUsername()}</td></tr>
+                        <tr><td>${game.value.getGameTitle()} | ${game.value.getUser().getUsername()}</td></tr>
+                        <tr><td>$${game.value.getGamePrice()}</td></tr>
                         <c:if test="${!game.value.getGameTags().isEmpty()}">
                             <tr><td>
                                 <c:forEach items="${game.value.getGameTags()}" var="tag">
@@ -54,9 +55,7 @@
                                 </c:forEach>
                                 </td></tr>
                         </c:if>
-
                     </div>
-
                 </c:forEach>
             </table>
         </div>

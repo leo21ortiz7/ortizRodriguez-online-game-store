@@ -175,7 +175,7 @@ public class Game implements Serializable {
         return galleryImages;
     }
 
-    public void setGalleryImagePaths(LinkedHashMap<Integer, byte[]> galleryImages) {
+    public void setGalleryImages(LinkedHashMap<Integer, byte[]> galleryImages) {
         this.galleryImages = galleryImages;
     }
 

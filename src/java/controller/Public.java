@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import util.GameSearch;
 
 /**
  *
@@ -68,7 +69,7 @@ public class Public extends HttpServlet {
 
                 case "viewCatalog": {
                     LinkedHashMap<Integer, Game> games = GameDA.selectAllGames();
-                    request.setAttribute("games", games);
+                    session.setAttribute("catalog", games);
 
                     url = "/catalog.jsp";
                     break;
@@ -115,6 +116,19 @@ public class Public extends HttpServlet {
 
                     break;
                 }
+                
+                case "search": {
+                    url = "/catalog.jsp";
+                    
+                    String gameTerm = request.getParameter("gameTerm");
+                    String devTerm = request.getParameter("devTerm");
+                    
+                    LinkedHashMap<Integer, Game> searchedCatalog = GameSearch.search(gameTerm, devTerm);
+                    
+                    session.setAttribute("gameTerm", gameTerm);
+                    session.setAttribute("devTerm", devTerm);
+                    session.setAttribute("catalog", searchedCatalog);
+                }
 
             }
         } catch (SQLException | NamingException ex) {
@@ -122,6 +136,8 @@ public class Public extends HttpServlet {
             LOG.log(Level.SEVERE, "*** Server Error", ex);
         }
 
+        request.setAttribute("controller", "Public");
+        
         request.setAttribute("errors", errors);
 
         getServletContext().getRequestDispatcher(url).forward(request, response);

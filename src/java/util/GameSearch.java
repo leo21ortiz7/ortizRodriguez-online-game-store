@@ -6,7 +6,10 @@ package util;
 
 import business.Game;
 import business.Tag;
+import data.GameDA;
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
+import javax.naming.NamingException;
 
 /**
  *
@@ -14,30 +17,39 @@ import java.util.LinkedHashMap;
  */
 public final class GameSearch {
     
-    public static LinkedHashMap<Integer, Game> search (LinkedHashMap<Integer, Game> gameList, String gameTerm, String devTerm) {
+    public static LinkedHashMap<Integer, Game> search (String gameTerm, String devTerm)
+            throws NamingException, SQLException {
         
+        LinkedHashMap<Integer, Game> gameList = GameDA.selectAllGames();
         LinkedHashMap<Integer, Game> newList = new LinkedHashMap<>();
         
+        String lowerGameTerm = gameTerm.toLowerCase();
+        String lowerDevTerm = devTerm.toLowerCase();
+        
         for (Game game : gameList.values()) {
-            if (!gameTerm.isBlank() && !devTerm.isBlank()) {
-                if (game.getGameTitle().contains(gameTerm) && game.getUser().getUsername().contains(devTerm)) {
+            if (!lowerGameTerm.isBlank() && !lowerDevTerm.isBlank()) {
+                if (game.getGameTitle().toLowerCase().contains(lowerGameTerm) 
+                        && game.getUser().getUsername().toLowerCase().contains(lowerDevTerm)) {
                     newList.put(game.getGameID(), game);
                 }
-            } else if (!gameTerm.isBlank()) {
-                if (game.getGameTitle().contains(gameTerm)) {
+            } else if (!lowerGameTerm.isBlank()) {
+                if (game.getGameTitle().toLowerCase().contains(lowerGameTerm)) {
                     newList.put(game.getGameID(), game);
                 }
-            } else if (!devTerm.isBlank()) {
-                if (game.getUser().getUsername().contains(devTerm)) {
+            } else if (!lowerDevTerm.isBlank()) {
+                if (game.getUser().getUsername().toLowerCase().contains(lowerDevTerm)) {
                     newList.put(game.getGameID(), game);
                 }
+            } else {
+                newList = GameDA.selectAllGames();
             }
         }
         
         return newList;
     }
     
-    public static LinkedHashMap<Integer, Game> tagFilterInclusive (LinkedHashMap<Integer, Game> gameList, LinkedHashMap<Integer, Tag> filterTags) {
+    public static LinkedHashMap<Integer, Game> tagFilterInclusive (LinkedHashMap<Integer, Game> gameList, LinkedHashMap<Integer, Tag> filterTags)
+            throws NamingException, SQLException {
         
         LinkedHashMap<Integer, Game> newList = new LinkedHashMap<>();
         
@@ -52,7 +64,8 @@ public final class GameSearch {
         return newList;
     }
     
-    public static LinkedHashMap<Integer, Game> tagFilterExclusive (LinkedHashMap<Integer, Game> gameList, LinkedHashMap<Integer, Tag> filterTags) {
+    public static LinkedHashMap<Integer, Game> tagFilterExclusive (LinkedHashMap<Integer, Game> gameList, LinkedHashMap<Integer, Tag> filterTags)
+            throws NamingException, SQLException {
         
         LinkedHashMap<Integer, Game> newList = new LinkedHashMap<>();
         

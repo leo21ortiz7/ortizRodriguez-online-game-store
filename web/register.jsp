@@ -37,7 +37,7 @@
                     <option value="CUSTOMER">Gamer</option>
                 </select>
             </div>
-            <c:if test="${errors.length > 0}">
+            <c:if test="${!errors.isEmpty()}">
                 <div class="errors">
                     <ul>
                         <c:forEach items="${errors}" var="error">
