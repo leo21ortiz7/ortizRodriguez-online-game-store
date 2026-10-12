@@ -4,11 +4,13 @@
  */
 package business;
 
+import java.io.Serializable;
+
 /**
  *
  * @author leo21
  */
-public class Tag {
+public class Tag implements Serializable {
     private int tagID;
     private String tagName;
 

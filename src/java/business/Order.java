@@ -4,13 +4,14 @@
  */
 package business;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
  *
  * @author leo21
  */
-public class Order {
+public class Order implements Serializable {
     private int orderID;
     private Game orderGames;
     private LocalDate orderDate;
