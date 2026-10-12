@@ -15,19 +15,8 @@
     <body>
         <%@include file="WEB-INF/jspf/nav.jspf" %>
         <h1>Game Store</h1>
-        <!-- Search Bar 
-             Can possibly be jspf -->
-        <div>
-            <h3>Search</h3>
-            <form action="Public" method="post">
-                <input type="hidden" name="action" value="search">
-                <lable for="gameTerm">Game:</lable>
-                <input type="text" id="gameTerm" name="gameTerm" value="${gameTerm}">
-                <lable for="devTerm">Developer:</lable>
-                <input type="text" id="devTerm" name="devTerm" value="${devTerm}">
-                <input type="submit" value="Search" >
-            </form>
-        </div>
+        <%@include file="WEB-INF/jspf/searchBar.jspf" %>
+        <%@include file="WEB-INF/jspf/tagsList.jspf" %>
         <div>
             <table>
                 <c:forEach items="${catalog}" var="game">

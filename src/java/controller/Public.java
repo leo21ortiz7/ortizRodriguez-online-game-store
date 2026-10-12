@@ -8,6 +8,7 @@ import business.Game;
 import business.Role;
 import business.User;
 import data.GameDA;
+import data.TagDA;
 import data.UserDA;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -68,8 +69,8 @@ public class Public extends HttpServlet {
                 }
 
                 case "viewCatalog": {
-                    LinkedHashMap<Integer, Game> games = GameDA.selectAllGames();
-                    session.setAttribute("catalog", games);
+                    session.setAttribute("catalog", GameDA.selectAllGames());
+                    session.setAttribute("tags", TagDA.selectAllTags());
 
                     url = "/catalog.jsp";
                     break;
