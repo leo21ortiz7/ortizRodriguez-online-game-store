@@ -8,6 +8,6 @@
         <input type="text" id="gameTerm" name="gameTerm" value="${gameTerm}">
         <lable for="devTerm">Developer:</lable>
         <input type="text" id="devTerm" name="devTerm" value="${devTerm}">
-        <input type="submit" value="Search" >
+        <input type="submit" value="Search" hidden>
     </form>
 </div>

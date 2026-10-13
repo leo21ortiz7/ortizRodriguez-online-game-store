@@ -118,36 +118,66 @@ public class Public extends HttpServlet {
 
                     break;
                 }
-                
+
                 case "search": {
                     url = "/catalog.jsp";
-                    
+
                     String gameTerm = request.getParameter("gameTerm");
                     String devTerm = request.getParameter("devTerm");
-                    
+
                     LinkedHashMap<Integer, Game> searchedCatalog = GameSearch.search(gameTerm, devTerm);
-                    
+
                     session.setAttribute("gameTerm", gameTerm);
                     session.setAttribute("devTerm", devTerm);
                     session.setAttribute("catalog", searchedCatalog);
-                    
+
                     break;
                 }
-                
+
                 case "singleTagFilter": {
                     url = "/catalog.jsp";
-                    
+
                     LinkedHashMap<Integer, Game> catalog = new LinkedHashMap<>();
                     catalog = (LinkedHashMap<Integer, Game>) session.getAttribute("catalog");
-                    
+
                     // Filter method only takes array of tags
                     LinkedHashMap<Integer, Tag> tagFilterList = new LinkedHashMap<>();
                     Tag tag = TagDA.selectTag(Integer.parseInt(request.getParameter("tagID")));
                     tagFilterList.put(tag.getTagID(), tag);
+
+                    LinkedHashMap<Integer, Game> searchedCatalog = GameSearch.tagFilterExclusive(catalog, tagFilterList);
+
+                    session.setAttribute("catalog", searchedCatalog);
+
+                    break;
+                }
+
+                case "multiTagFilter": {
+                    url = "/catalog.jsp";
+
+                    LinkedHashMap<Integer, Game> catalog = new LinkedHashMap<>();
+                    LinkedHashMap<Integer, Game> filteredCatalog = new LinkedHashMap<>();
+                    LinkedHashMap<Integer, Tag> tagFilterList = new LinkedHashMap<>();
                     
-                    LinkedHashMap<Integer, Game> filteredCatalog = GameSearch.tagFilterExclusive(catalog, tagFilterList);
+                    catalog = (LinkedHashMap<Integer, Game>) session.getAttribute("catalog");
+                    String[] selectedTags = request.getParameterValues("tags");
                     
-                    session.setAttribute("catalog", filteredCatalog);
+                    String restriction = request.getParameter("filterRestriction");
+
+                    if (selectedTags != null) {
+                        for (String tagID : selectedTags) {
+                            Tag tag = TagDA.selectTag(Integer.parseInt(tagID));
+                            tagFilterList.put(tag.getTagID(), tag);
+                        }
+                        
+                        if (restriction == null || restriction.equals("inclusive")) {
+                            filteredCatalog = GameSearch.tagFilterInclusive(catalog, tagFilterList);
+                        } else {
+                            filteredCatalog = GameSearch.tagFilterExclusive(catalog, tagFilterList);
+                        }
+                        
+                        session.setAttribute("catalog", filteredCatalog);
+                    }
                     
                     break;
                 }
@@ -159,7 +189,7 @@ public class Public extends HttpServlet {
         }
 
         request.setAttribute("controller", "Public");
-        
+
         request.setAttribute("errors", errors);
 
         getServletContext().getRequestDispatcher(url).forward(request, response);

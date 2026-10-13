@@ -16,7 +16,17 @@
         <%@include file="WEB-INF/jspf/nav.jspf" %>
         <h1>Game Store</h1>
         <%@include file="WEB-INF/jspf/searchBar.jspf" %>
-        <%@include file="WEB-INF/jspf/tagsList.jspf" %>
+        <form action="Public" method ="post">
+            <input type="hidden" name="action" value="multiTagFilter">
+            <%@include file="WEB-INF/jspf/tagsList.jspf" %>
+            <lable for="inclusve">Inclusive</lable>
+            <input type="radio" id="inclusive" name="filterRestriction" value="inclusive">
+            <lable for="exclusive">Exclusive</lable>
+            <input type="radio" id="exclusive" name="filterRestriction" value="exclusive">
+            <br>
+            <input type="submit" value="Filter Catalog">
+        </form>
+        <br>
         <div>
             <table>
                 <c:forEach items="${catalog}" var="game">
