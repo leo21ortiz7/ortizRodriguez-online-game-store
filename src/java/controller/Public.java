@@ -6,6 +6,7 @@ package controller;
 
 import business.Game;
 import business.Role;
+import business.Tag;
 import business.User;
 import data.GameDA;
 import data.TagDA;
@@ -129,6 +130,26 @@ public class Public extends HttpServlet {
                     session.setAttribute("gameTerm", gameTerm);
                     session.setAttribute("devTerm", devTerm);
                     session.setAttribute("catalog", searchedCatalog);
+                    
+                    break;
+                }
+                
+                case "singleTagFilter": {
+                    url = "/catalog.jsp";
+                    
+                    LinkedHashMap<Integer, Game> catalog = new LinkedHashMap<>();
+                    catalog = (LinkedHashMap<Integer, Game>) session.getAttribute("catalog");
+                    
+                    // Filter method only takes array of tags
+                    LinkedHashMap<Integer, Tag> tagFilterList = new LinkedHashMap<>();
+                    Tag tag = TagDA.selectTag(Integer.parseInt(request.getParameter("tagID")));
+                    tagFilterList.put(tag.getTagID(), tag);
+                    
+                    LinkedHashMap<Integer, Game> filteredCatalog = GameSearch.tagFilterExclusive(catalog, tagFilterList);
+                    
+                    session.setAttribute("catalog", filteredCatalog);
+                    
+                    break;
                 }
 
             }

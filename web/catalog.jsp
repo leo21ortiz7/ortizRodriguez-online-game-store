@@ -39,7 +39,7 @@
                                     <form action="Public" method="post">
                                         <input type="hidden" name="action" value="singleTagFilter">
                                         <input type="hidden" name="tagID" value="${tag.key}">
-                                        <input type="submit" value="${tag.value.getTagName()}"
+                                        <input type="submit" value="${tag.value.getTagName()}">
                                     </form>
                                 </c:forEach>
                                 </td></tr>
