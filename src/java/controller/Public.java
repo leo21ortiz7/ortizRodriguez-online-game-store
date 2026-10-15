@@ -93,8 +93,6 @@ public class Public extends HttpServlet {
 
                         url = "/Public?action=viewCatalog";
 
-                        //this forwards to the private controller with an action value
-                        //url = "/Private?action=gotoProfile";
                     }
 
                     break;
@@ -130,6 +128,7 @@ public class Public extends HttpServlet {
                     session.setAttribute("gameTerm", gameTerm);
                     session.setAttribute("devTerm", devTerm);
                     session.setAttribute("catalog", searchedCatalog);
+                    
 
                     break;
                 }
@@ -176,7 +175,7 @@ public class Public extends HttpServlet {
                             filteredCatalog = GameSearch.tagFilterExclusive(catalog, tagFilterList);
                         }
                         
-                        session.setAttribute("catalog", filteredCatalog);
+                        request.setAttribute("catalog", filteredCatalog);
                     }
                     
                     break;
