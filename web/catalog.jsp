@@ -33,27 +33,32 @@
                     <div>
                         <tr>
                             <td>
-                                <a href="Private?action=viewGame&gameID=${game.key}">
-                                    <img src="ImageProcess?gameID=${game.key}" 
-                                         width="150" 
-                                         height="200" 
-                                         alt="Cover Image"/>
-                                </a>
+                                <form action="Private" method="post">
+                                    <input type="hidden" name="action" value="viewGame">
+                                    <input type="hidden" name="gameID" value="${game.key}">
+
+                                    <button type="submit" style="border: none; padding: 0; background: none; cursor: pointer;">
+                                        <img src="ImageProcess?gameID=${game.key}"
+                                             width="150"
+                                             height="200"
+                                             alt="View game"/>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         <tr><td>${game.value.getGameTitle()} | ${game.value.getUser().getUsername()}</td></tr>
                         <tr><td>$${game.value.getGamePrice()}</td></tr>
                         <c:if test="${!game.value.getGameTags().isEmpty()}">
                             <tr><td>
-                                <c:forEach items="${game.value.getGameTags()}" var="tag">
-                                    <form action="Public" method="post">
-                                        <input type="hidden" name="action" value="singleTagFilter">
-                                        <input type="hidden" name="tagID" value="${tag.key}">
-                                        <input type="submit" value="${tag.value.getTagName()}">
-                                    </form>
-                                </c:forEach>
+                                    <c:forEach items="${game.value.getGameTags()}" var="tag">
+                                        <form action="Public" method="post">
+                                            <input type="hidden" name="action" value="singleTagFilter">
+                                            <input type="hidden" name="tagID" value="${tag.key}">
+                                            <input type="submit" value="${tag.value.getTagName()}">
+                                        </form>
+                                    </c:forEach>
                                 </td></tr>
-                        </c:if>
+                            </c:if>
                     </div>
                 </c:forEach>
             </table>
