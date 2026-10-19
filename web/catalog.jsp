@@ -33,20 +33,16 @@
                     <div>
                         <tr>
                             <td>
-                                <form action="Private" method="post">
-                                    <input type="hidden" name="action" value="viewGame">
-                                    <input type="hidden" name="gameID" value="${game.key}">
-
-                                    <button type="submit" style="border: none; padding: 0; background: none; cursor: pointer;">
-                                        <img src="ImageProcess?gameID=${game.key}"
-                                             width="150"
-                                             height="200"
-                                             alt="View game"/>
-                                    </button>
-                                </form>
+                                <a href="Private?action=viewGame&amp;gameID=${game.key}">
+                                    <img src="ImageProcess?gameID=${game.key}"
+                                         width="150"
+                                         height="200"
+                                         alt="View game">
+                                </a>
                             </td>
                         </tr>
-                        <tr><td>${game.value.getGameTitle()} | ${game.value.getUser().getUsername()}</td></tr>
+                        <tr><td><a href="Private?action=viewGame&amp;gameID=${game.key}">${game.value.getGameTitle()}</a> | 
+                                <a href="Private?action=viewDev&amp;devID=${game.value.getUser().getUserID()}">${game.value.getUser().getUsername()}</a></td></tr>
                         <tr><td>$${game.value.getGamePrice()}</td></tr>
                         <c:if test="${!game.value.getGameTags().isEmpty()}">
                             <tr><td>

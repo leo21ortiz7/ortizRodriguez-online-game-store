@@ -67,6 +67,15 @@ public class Private extends HttpServlet {
                     request.setAttribute("title", game.getGameTitle());
                     break;
                 }
+                
+                case "viewDev": {
+                    url = "/private/developerProfile.jsp";
+                    
+                    User user = UserDA.selectUser(Integer.parseInt(request.getParameter("devID")));
+                    
+                    request.setAttribute("username", user.getUsername());
+                    break;
+                }
 
             }
         } catch (SQLException | NamingException ex) {
