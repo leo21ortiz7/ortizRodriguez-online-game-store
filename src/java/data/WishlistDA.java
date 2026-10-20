@@ -17,8 +17,7 @@ import javax.naming.NamingException;
  * @author leo21
  */
 public class WishlistDA {
-    
-    
+
     public static int insertWishlistGame(int userID, int gameID)
             throws NamingException, SQLException {
 
@@ -207,5 +206,37 @@ public class WishlistDA {
         pool.freeConnection(connection);
 
         return games;
+    }
+
+    public static int countWishlists(int gameID)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query
+                = "SELECT COUNT(*) "
+                + "FROM wishlists "
+                + "WHERE game_id = ?";
+
+        ps = connection.prepareStatement(query);
+
+        ps.setInt(1, gameID);
+
+        rs = ps.executeQuery();
+
+        int count = 0;
+
+        if (rs.next()) {
+            count = rs.getInt(1);
+        }
+
+        rs.close();
+        ps.close();
+        pool.freeConnection(connection);
+
+        return count;
     }
 }
