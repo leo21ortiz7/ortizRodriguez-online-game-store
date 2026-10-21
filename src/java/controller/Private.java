@@ -64,7 +64,7 @@ public class Private extends HttpServlet {
                     
                     Game game = GameDA.selectGame(Integer.parseInt(request.getParameter("gameID")));
                     
-                    request.setAttribute("title", game.getGameTitle());
+                    request.setAttribute("game", game);
                     break;
                 }
                 

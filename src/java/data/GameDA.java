@@ -134,10 +134,10 @@ public class GameDA {
 
             Game game = new Game(gameID, userID, gameTitle, gameDescription, gamePrice, releaseDate, released, coverArt, gameFilePath);
 
-            // TODO: insert tags and gallery images to game
+            // Insert tags and gallery images to game
             game.setGameTags(TagDA.selectAllGameTags(gameID));
             game.setGalleryImages(selectGameGalleryImages(gameID));
-            
+
             games.put(game.getGameID(), game);
         }
 
@@ -184,6 +184,10 @@ public class GameDA {
                     released,
                     coverArt,
                     gameFilePath);
+
+            // Insert tags and gallery images to game
+            game.setGameTags(TagDA.selectAllGameTags(gameID));
+            game.setGalleryImages(selectGameGalleryImages(gameID));
         }
 
         rs.close();
