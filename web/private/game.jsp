@@ -19,7 +19,7 @@
         <!-- Cover Art -->
         <div>
             <img
-                src="ImageProcess?gameID=${game.gameID}"
+                src="ImageProcess?imageParam=cover&amp;gameID=${game.gameID}"
                 alt="Cover art for ${game.gameTitle}"
                 style="max-width: 300px;"
                 />
@@ -73,11 +73,11 @@
         <h2>Gallery</h2>
 
         <div>
-            <c:forEach begin="0" end="${galleryImageCount - 1}" var="i">
+            <c:forEach items="${game.galleryImages}" var="image" varStatus="status">
 
                 <img
-                    src="ImageProcess?gameID=${game.gameID}&galleryIndex=${i}"
-                    alt="Gallery image ${i + 1}"
+                    src="ImageProcess?imageParam=gallery&amp;imageID=${image.key}"
+                    alt="Gallery image ${status.count}"
                     style="width: 150px; margin: 5px;"
                 />
             </c:forEach>
@@ -90,7 +90,7 @@
         </p>
 
         <!-- Customer Controls -->
-        <c:if test="${userRole == 'Customer'}">
+        <c:if test="${userRole == 'CUSTOMER'}">
 
             <c:choose>
                 <c:when test="${ownsGame}">
@@ -126,7 +126,7 @@
         </c:if>
 
         <!-- Developer Controls -->
-        <c:if test="${userRole == 'Developer' && isGameDeveloper}">
+        <c:if test="${userRole == 'DEVELOPER' && isGameCreator}">
 
             <h2>Developer Options</h2>
 

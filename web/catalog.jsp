@@ -34,7 +34,7 @@
                         <tr>
                             <td>
                                 <a href="Private?action=viewGame&amp;gameID=${game.key}">
-                                    <img src="ImageProcess?gameID=${game.key}"
+                                    <img src="ImageProcess?imageParam=cover&amp;gameID=${game.gameID}"
                                          width="150"
                                          height="200"
                                          alt="View game">

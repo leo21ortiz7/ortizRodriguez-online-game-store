@@ -32,29 +32,49 @@ public class ImageProcess extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        String imageParam = request.getParameter("imageParam");
         String gameID = request.getParameter("gameID");
-
-        if (gameID == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing gameID");
-            return;
-        }
+        String imageID = request.getParameter("imageID");
 
         try {
-            int id = Integer.parseInt(gameID);
+            byte[] image;
 
-            byte[] image = GameDA.selectCoverImage(id);
+            switch (imageParam) {
+                case "cover": {
+
+                    if (gameID == null) {
+                        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing gameID");
+                        return;
+                    }
+
+                    image = GameDA.selectCoverImage(Integer.parseInt(gameID));
+                    break;
+                }
+
+                case "gallery": {
+                    
+                    if (imageID == null) {
+                        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing imageID");
+                        return;
+                    }
+                    
+                    image = GameDA.selectGalleryImage(Integer.parseInt(imageID));
+                    break;
+                }
+                
+                default: image = null;
+            }
 
             if (image == null || image.length < 1) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Image not found");
                 return;
             }
 
-
             response.setContentType("image/jpeg");
             response.getOutputStream().write(image);
 
         } catch (NumberFormatException ex) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid gameID");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid gameID or imageID");
         } catch (SQLException | NamingException ex) {
             throw new ServletException(ex);
         }
