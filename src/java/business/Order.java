@@ -13,17 +13,20 @@ import java.time.LocalDate;
  */
 public class Order implements Serializable {
     private int orderID;
-    private Game orderGames;
+    private User orderUser;
+    private Game orderGame;
     private LocalDate orderDate;
 
-    public Order(Game orderGames, LocalDate orderDate) {
-        this.orderGames = orderGames;
+    public Order(User orderUser, Game orderGames, LocalDate orderDate) {
+        this.orderUser = orderUser;
+        this.orderGame = orderGames;
         this.orderDate = orderDate;
     }
     
-    public Order(int orderID, Game orderGames, LocalDate orderDate) {
+    public Order(int orderID, User orderUser, Game orderGames, LocalDate orderDate) {
         this.orderID = orderID;
-        this.orderGames = orderGames;
+        this.orderUser = orderUser;
+        this.orderGame = orderGames;
         this.orderDate = orderDate;
     }
 
@@ -35,12 +38,20 @@ public class Order implements Serializable {
         this.orderID = orderID;
     }
 
-    public Game getOrderGames() {
-        return orderGames;
+    public User getOrderUser() {
+        return orderUser;
     }
 
-    public void setOrderGames(Game orderGames) {
-        this.orderGames = orderGames;
+    public void setOrderUser(User orderUser) {
+        this.orderUser = orderUser;
+    }
+
+    public Game getOrderGame() {
+        return orderGame;
+    }
+
+    public void setOrderGame(Game orderGame) {
+        this.orderGame = orderGame;
     }
 
     public LocalDate getOrderDate() {
