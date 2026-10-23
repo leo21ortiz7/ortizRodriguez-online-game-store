@@ -21,7 +21,7 @@ import javax.naming.NamingException;
  */
 public class OrderDA {
 
-    public static int insertOrder(int userID, Order order)
+    public static int insertOrder(Order order)
             throws NamingException, SQLException {
 
         ConnectionPool pool = ConnectionPool.getInstance();
@@ -34,8 +34,8 @@ public class OrderDA {
 
         ps = connection.prepareStatement(query);
 
-        ps.setInt(1, userID);
-        ps.setInt(2, order.getOrderGames().getGameID());
+        ps.setInt(1, order.getUserID());
+        ps.setInt(2, order.getGameID());
         ps.setDate(3, Date.valueOf(order.getOrderDate()));
 
         int rows = ps.executeUpdate();
@@ -78,7 +78,7 @@ public class OrderDA {
         ResultSet rs = null;
 
         String query
-                = "SELECT order_id, game_id, order_date "
+                = "SELECT order_id, user_id, game_id, order_date "
                 + "FROM orders "
                 + "WHERE order_id = ?";
 
@@ -91,16 +91,12 @@ public class OrderDA {
         Order order = null;
 
         if (rs.next()) {
-
+            
+            int userID = rs.getInt("user_id");
             int gameID = rs.getInt("game_id");
+            LocalDate date = rs.getDate("order_date").toLocalDate();
 
-            Game game = GameDA.selectGame(gameID);
-
-            order = new Order(
-                    rs.getInt("order_id"),
-                    game,
-                    rs.getDate("order_date").toLocalDate()
-            );
+            order = new Order(orderID, userID, gameID, date);
         }
 
         rs.close();
@@ -137,9 +133,7 @@ public class OrderDA {
             int gameID = rs.getInt("game_id");
             LocalDate date = rs.getDate("order_date").toLocalDate();
 
-            Game game = GameDA.selectGame(gameID);
-
-            Order order = new Order(orderID, game, date);
+            Order order = new Order(orderID, userID, gameID, date);
 
             orders.put(orderID, order);
         }
@@ -170,12 +164,11 @@ public class OrderDA {
         while (rs.next()) {
 
             int orderID = rs.getInt("order_id");
+            int userID = rs.getInt("user_id");
             int gameID = rs.getInt("game_id");
             LocalDate date = rs.getDate("order_date").toLocalDate();
 
-            Game game = GameDA.selectGame(gameID);
-
-            Order order = new Order(orderID, game, date);
+            Order order = new Order(orderID, userID, gameID, date);
 
             orders.put(orderID, order);
         }
