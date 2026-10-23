@@ -12,21 +12,22 @@ import java.time.LocalDate;
  * @author leo21
  */
 public class Order implements Serializable {
-    private int orderID;
-    private User orderUser;
-    private Game orderGame;
+    private int orderID, userID, gameID;
     private LocalDate orderDate;
 
-    public Order(User orderUser, Game orderGames, LocalDate orderDate) {
-        this.orderUser = orderUser;
-        this.orderGame = orderGames;
+    public Order() {
+    }
+
+    public Order(int userID, int gameID, LocalDate orderDate) {
+        this.userID = userID;
+        this.gameID = gameID;
         this.orderDate = orderDate;
     }
-    
-    public Order(int orderID, User orderUser, Game orderGames, LocalDate orderDate) {
+
+    public Order(int orderID, int userID, int gameID, LocalDate orderDate) {
         this.orderID = orderID;
-        this.orderUser = orderUser;
-        this.orderGame = orderGames;
+        this.userID = userID;
+        this.gameID = gameID;
         this.orderDate = orderDate;
     }
 
@@ -38,20 +39,20 @@ public class Order implements Serializable {
         this.orderID = orderID;
     }
 
-    public User getOrderUser() {
-        return orderUser;
+    public int getUserID() {
+        return userID;
     }
 
-    public void setOrderUser(User orderUser) {
-        this.orderUser = orderUser;
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
-    public Game getOrderGame() {
-        return orderGame;
+    public int getGameID() {
+        return gameID;
     }
 
-    public void setOrderGame(Game orderGame) {
-        this.orderGame = orderGame;
+    public void setGameID(int gameID) {
+        this.gameID = gameID;
     }
 
     public LocalDate getOrderDate() {
@@ -61,6 +62,8 @@ public class Order implements Serializable {
     public void setOrderDate(LocalDate orderDate) {
         this.orderDate = orderDate;
     }
+
+    
     
     
 }
