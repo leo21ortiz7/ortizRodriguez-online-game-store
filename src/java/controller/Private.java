@@ -9,6 +9,7 @@ import business.Order;
 import business.Role;
 import business.Tag;
 import business.User;
+import data.CartDA;
 import data.GameDA;
 import data.OrderDA;
 import data.TagDA;
@@ -85,6 +86,24 @@ public class Private extends HttpServlet {
                     request.setAttribute("game", game);
                     request.setAttribute("wishlistCount", wishlistCount);
                     request.setAttribute("userRoles", userRoles);
+                    break;
+                }
+                
+                case "addToCart": {
+                    Game game = (Game) request.getAttribute("game");
+                    CartDA.insertCartGame(myUser.getUserID(), game.getGameID());
+                    break;
+                }
+                
+                case "addToWishlist": {
+                    break;
+                }
+                
+                case "checkoutGame": {
+                    break;
+                }
+                
+                case "deleteGame": {
                     break;
                 }
 
