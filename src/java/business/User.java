@@ -4,8 +4,12 @@
  */
 package business;
 
+import data.OrderDA;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import javax.naming.NamingException;
 
 /**
  *
@@ -64,6 +68,25 @@ public class User implements Serializable{
         this.password = password;
     }
     
+    // Checkers
+    public boolean ownsGame(int gameID) throws NamingException, SQLException {
+        
+        LinkedHashMap<Integer, Order> orders = OrderDA.selectAllGameOrders(userID);
+        for (Order order : orders.values()) {
+            if (order.getGameID() == gameID) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isGameCreator (int gameCreatorID) {
+        if (gameCreatorID == userID) {
+            return true;
+        }
+        return false;
+    }
+
     // Validation methods
     public static ArrayList<String> validateEmail(String email) {
         ArrayList<String> errors = new ArrayList<>();

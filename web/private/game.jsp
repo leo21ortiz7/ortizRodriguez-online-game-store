@@ -14,13 +14,13 @@
     </head>
     <body>
 
-        <h1><c:out value="${game.gameTitle}"/></h1>
+        <h1><c:out value="${game.getGameTitle()}"/></h1>
 
         <!-- Cover Art -->
         <div>
             <img
-                src="ImageProcess?imageParam=cover&amp;gameID=${game.gameID}"
-                alt="Cover art for ${game.gameTitle}"
+                src="ImageProcess?imageParam=cover&amp;gameID=${game.getGameID()}"
+                alt="Cover art for ${game.getGameTitle()}"
                 style="max-width: 300px;"
                 />
         </div>
@@ -28,20 +28,20 @@
         <!-- Developer -->
         <p>
             <strong>Developer:</strong>
-            <c:out value="${game.getUser().username}"/>
+            <c:out value="${game.getUser().getUsername()}"/>
         </p>
 
         <!-- Price -->
         <p>
             <strong>Price:</strong>
-            $<c:out value="${game.price}"/>
+            $<c:out value="${game.getGamePrice()}"/>
         </p>
 
         <!-- Released Status -->
         <p>
             <strong>Released:</strong>
             <c:choose>
-                <c:when test="${game.released}">
+                <c:when test="${game.isReleased()}">
                     Yes
                 </c:when>
                 <c:otherwise>
@@ -54,11 +54,11 @@
         <p>
             <strong>Release Date:</strong>
             <c:choose>
-                <c:when test="${game.releaseDate != null}">
-                    <c:out value="${game.releaseDate}"/>
+                <c:when test="${game.getReleaseDate() == null}">
+                    TBD
                 </c:when>
                 <c:otherwise>
-                    TBD
+                    <c:out value="${game.getReleaseDate()}"/>
                 </c:otherwise>
             </c:choose>
         </p>
@@ -66,21 +66,29 @@
         <!-- Description -->
         <h2>Description</h2>
         <p>
-            <c:out value="${game.description}"/>
+            <c:out value="${game.getGameDescription()}"/>
         </p>
 
         <!-- Gallery -->
         <h2>Gallery</h2>
 
         <div>
-            <c:forEach items="${game.galleryImages}" var="image" varStatus="status">
+            <c:choose>
+                <c:when test="${game.getGalleryImages().isEmpty()}">
+                    <p>No gallery images</p>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach items="${game.getGalleryImages()}" var="image" varStatus="status">
 
-                <img
-                    src="ImageProcess?imageParam=gallery&amp;imageID=${image.key}"
-                    alt="Gallery image ${status.count}"
-                    style="width: 150px; margin: 5px;"
-                />
-            </c:forEach>
+                        <img
+                            src="ImageProcess?imageParam=gallery&amp;imageID=${image.key}"
+                            alt="Gallery image ${status.count}"
+                            style="width: 150px; margin: 5px;"
+                            />
+                    </c:forEach>
+                </c:otherwise>
+            </c:choose>
+
         </div>
 
         <!-- Wishlist Count -->
@@ -90,7 +98,8 @@
         </p>
 
         <!-- Customer Controls -->
-        <c:if test="${userRole == 'CUSTOMER'}">
+        <!-- TODO: Make foreach -->
+        <c:if test="${userRoles.containsKey('CUSTOMER')}">
 
             <c:choose>
                 <c:when test="${ownsGame}">
@@ -100,21 +109,21 @@
                 <c:otherwise>
 
                     <!-- Add to Cart -->
-                    <form action="${controllerPath}" method="post">
+                    <form action="Private" method="post">
                         <input type="hidden" name="action" value="addToCart">
                         <input type="hidden" name="gameID" value="${game.gameID}">
                         <button type="submit">Add to Cart</button>
                     </form>
 
                     <!-- Add to Wishlist -->
-                    <form action="${controllerPath}" method="post">
+                    <form action="Private" method="post">
                         <input type="hidden" name="action" value="addToWishlist">
                         <input type="hidden" name="gameID" value="${game.gameID}">
                         <button type="submit">Add to Wishlist</button>
                     </form>
 
                     <!-- Buy Now -->
-                    <form action="${controllerPath}" method="post">
+                    <form action="Private" method="post">
                         <input type="hidden" name="action" value="checkoutGame">
                         <input type="hidden" name="gameID" value="${game.gameID}">
                         <button type="submit">Buy Now</button>
@@ -126,12 +135,12 @@
         </c:if>
 
         <!-- Developer Controls -->
-        <c:if test="${userRole == 'DEVELOPER' && isGameCreator}">
+        <c:if test="${userRoles.containsKey('DEVELOPER') && isGameCreator}">
 
             <h2>Developer Options</h2>
 
             <form
-                action="${controllerPath}"
+                action="Private"
                 method="post"
                 onsubmit="return confirm('Are you sure you want to delete this game?');"
                 >

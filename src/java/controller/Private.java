@@ -5,12 +5,15 @@
 package controller;
 
 import business.Game;
+import business.Order;
 import business.Role;
 import business.Tag;
 import business.User;
 import data.GameDA;
+import data.OrderDA;
 import data.TagDA;
 import data.UserDA;
+import data.WishlistDA;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -42,7 +45,7 @@ public class Private extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     private static final Logger LOG = Logger.getLogger(Public.class.getName());
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -50,6 +53,8 @@ public class Private extends HttpServlet {
         String action = request.getParameter("action");
 
         HttpSession session = request.getSession();
+
+        User myUser = (User) session.getAttribute("myUser");
 
         ArrayList errors = new ArrayList();
 
@@ -61,18 +66,35 @@ public class Private extends HttpServlet {
             switch (action) {
                 case "viewGame": {
                     url = "/private/game.jsp";
-                    
+
                     Game game = GameDA.selectGame(Integer.parseInt(request.getParameter("gameID")));
+                    int wishlistCount = WishlistDA.countWishlists(game.getGameID());
+                    LinkedHashMap<String, Role> userRoles = UserDA.selectUserRoles(myUser.getUserID());
+
+                    if (userRoles.containsKey("CUSTOMER")) {
+                        // Check ownership of game
+                        boolean ownsGame = myUser.ownsGame(game.getGameID());
+                        request.setAttribute("ownsGame", ownsGame);
+                    }
                     
+                    if (userRoles.containsKey("DEVELOPER")) {
+                        boolean isGameCreator = myUser.isGameCreator(game.getUserID());
+                        request.setAttribute("isGameCreator", isGameCreator);
+                    }
+
                     request.setAttribute("game", game);
+                    request.setAttribute("wishlistCount", wishlistCount);
+                    request.setAttribute("userRoles", userRoles);
                     break;
                 }
-                
+
                 case "viewDev": {
                     url = "/private/developerProfile.jsp";
-                    
-                    User user = UserDA.selectUser(Integer.parseInt(request.getParameter("devID")));
-                    
+
+                    String devID = request.getParameter("devID");
+
+                    User user = UserDA.selectUser(Integer.parseInt(devID));
+
                     request.setAttribute("username", user.getUsername());
                     break;
                 }

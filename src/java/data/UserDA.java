@@ -256,7 +256,7 @@ public class UserDA {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        String query = "SELECT * FROM user_roles"
+        String query = "SELECT * FROM user_roles "
                 + "WHERE user_id = ?";
 
         ps = connection.prepareStatement(query);
