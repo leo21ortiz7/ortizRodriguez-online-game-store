@@ -7,7 +7,7 @@
 document.addEventListener("submit", async function (event) {
     const form = event.target;
 
-    if (!form.matches(".async-action-form")) {
+    if (!form.matches(".async-form")) {
         return;
     }
 
@@ -20,7 +20,7 @@ document.addEventListener("submit", async function (event) {
         button.disabled = true;
         message.textContent = "Processing...";
 
-        const response = await fetch(form.action, {
+        const response = await fetch(form.getAttribute("action"), {
             method: "POST",
             body: new URLSearchParams(new FormData(form))
         });
@@ -28,14 +28,20 @@ document.addEventListener("submit", async function (event) {
         const result = await response.text();
 
         if (!response.ok) {
-            throw new Error(result || "The operation failed.");
+            console.error("Request failed:", response.status, result);
+
+            throw new Error(
+                    response.status === 400
+                    ? "The server rejected the request. Check the submitted parameters."
+                    : "The operation failed. HTTP status: " + response.status
+                    );
         }
 
         message.textContent = result;
 
     } catch (error) {
         message.textContent =
-            error.message || "An unexpected error occurred.";
+                error.message || "An unexpected error occurred.";
     } finally {
         button.disabled = false;
     }

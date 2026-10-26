@@ -109,17 +109,19 @@
                 <c:otherwise>
 
                     <!-- Add to Cart -->
-                    <form action="Private" method="post">
+                    <form action="${pageContext.request.contextPath}/Private" method="post" class="async-form">
                         <input type="hidden" name="action" value="addToCart">
                         <input type="hidden" name="gameID" value="${game.gameID}">
                         <button type="submit">Add to Cart</button>
+                        <p class="action-message"></p>
                     </form>
 
                     <!-- Add to Wishlist -->
-                    <form action="Private" method="post">
+                    <form action="${pageContext.request.contextPath}/Private" method="post" class="async-form">
                         <input type="hidden" name="action" value="addToWishlist">
                         <input type="hidden" name="gameID" value="${game.gameID}">
                         <button type="submit">Add to Wishlist</button>
+                        <p class="action-message"></p>
                     </form>
 
                     <!-- Buy Now -->
@@ -150,6 +152,7 @@
             </form>
 
         </c:if>
-
+            
+            <script src="${pageContext.request.contextPath}/js/asyncActions.js"></script>
     </body>
 </html>

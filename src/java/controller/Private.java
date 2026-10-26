@@ -77,7 +77,7 @@ public class Private extends HttpServlet {
                         boolean ownsGame = myUser.ownsGame(game.getGameID());
                         request.setAttribute("ownsGame", ownsGame);
                     }
-                    
+
                     if (userRoles.containsKey("DEVELOPER")) {
                         boolean isGameCreator = myUser.isGameCreator(game.getUserID());
                         request.setAttribute("isGameCreator", isGameCreator);
@@ -88,21 +88,61 @@ public class Private extends HttpServlet {
                     request.setAttribute("userRoles", userRoles);
                     break;
                 }
-                
+
                 case "addToCart": {
-                    Game game = (Game) request.getAttribute("game");
-                    CartDA.insertCartGame(myUser.getUserID(), game.getGameID());
-                    break;
+                    String gameID = request.getParameter("gameID");
+
+                    if (gameID == null || gameID.isBlank()) {
+                        response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+                                "Missing gameID parameter.");
+                        return;
+                    }
+
+                    try {
+                        int id = Integer.parseInt(gameID);
+
+                        CartDA.insertCartGame(myUser.getUserID(), id);
+
+                        response.setContentType("text/plain;charset=UTF-8");
+                        response.getWriter().write("Game added to cart!");
+                        return;
+
+                    } catch (NumberFormatException ex) {
+                        response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+                                "Invalid gameID parameter.");
+                        return;
+                    }
                 }
-                
+
                 case "addToWishlist": {
-                    break;
+                    String gameID = request.getParameter("gameID");
+
+                    if (gameID == null || gameID.isBlank()) {
+                        response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+                                "Missing gameID parameter.");
+                        return;
+                    }
+
+                    try {
+                        int id = Integer.parseInt(gameID);
+
+                        WishlistDA.insertWishlistGame(myUser.getUserID(), id);
+
+                        response.setContentType("text/plain;charset=UTF-8");
+                        response.getWriter().write("Game added to cart!");
+                        return;
+
+                    } catch (NumberFormatException ex) {
+                        response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+                                "Invalid gameID parameter.");
+                        return;
+                    }
                 }
-                
+
                 case "checkoutGame": {
                     break;
                 }
-                
+
                 case "deleteGame": {
                     break;
                 }
@@ -122,6 +162,8 @@ public class Private extends HttpServlet {
         } catch (SQLException | NamingException ex) {
             errors.add("Server down. Try again later.");
             LOG.log(Level.SEVERE, "*** Server Error", ex);
+        } catch (Error ex) {
+            LOG.log(Level.SEVERE, null, ex);
         }
 
         request.setAttribute("controller", "Private");
