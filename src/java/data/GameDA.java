@@ -106,6 +106,22 @@ public class GameDA {
         return rows;
 
     }
+    
+    public static int deleteGame(int gameID) throws NamingException, SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+
+        String query = "DELETE FROM User "
+                + "WHERE game_id = ?";
+
+        ps = connection.prepareStatement(query);
+
+        ps.setInt(1, gameID);
+
+        return ps.executeUpdate();
+
+    }
 
     public static LinkedHashMap<Integer, Game> selectAllGames() throws NamingException, SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();

@@ -70,7 +70,7 @@ public class UserDA {
 
     }
 
-    public static int delete(User user) throws NamingException, SQLException {
+    public static int deleteUser(int userID) throws NamingException, SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
@@ -80,7 +80,7 @@ public class UserDA {
 
         ps = connection.prepareStatement(query);
 
-        ps.setInt(1, user.getUserID());
+        ps.setInt(1, userID);
 
         return ps.executeUpdate();
 

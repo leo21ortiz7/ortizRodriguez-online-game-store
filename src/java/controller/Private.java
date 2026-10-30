@@ -16,7 +16,6 @@ import data.TagDA;
 import data.UserDA;
 import data.WishlistDA;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -140,10 +139,17 @@ public class Private extends HttpServlet {
                 }
 
                 case "checkoutGame": {
+                    String gameID = request.getParameter("gameID");
+                    url = "/Customer?gameID=" + gameID;
+                    
                     break;
                 }
 
                 case "deleteGame": {
+                    url = "/Public?action=viewCatalog";
+                    
+                    String gameID = request.getParameter("gameID");
+                    GameDA.deleteGame(Integer.parseInt(gameID));
                     break;
                 }
 
