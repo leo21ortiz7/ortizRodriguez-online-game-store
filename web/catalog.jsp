@@ -27,38 +27,11 @@
             <input type="submit" value="Filter Catalog">
         </form>
         <br>
-        <div>
-            <table>
-                <c:forEach items="${catalog}" var="game">
-                    <div>
-                        <tr>
-                            <td>
-                                <a href="Private?action=viewGame&amp;gameID=${game.key}">
-                                    <img src="ImageProcess?imageParam=cover&amp;gameID=${game.key}"
-                                         width="150"
-                                         height="200"
-                                         alt="View game">
-                                </a>
-                            </td>
-                        </tr>
-                        <tr><td><a href="Private?action=viewGame&amp;gameID=${game.key}">${game.value.getGameTitle()}</a> | 
-                                <a href="Private?action=viewDev&amp;devID=${game.value.getUser().getUserID()}">${game.value.getUser().getUsername()}</a></td></tr>
-                        <tr><td>$${game.value.getGamePrice()}</td></tr>
-                        <c:if test="${!game.value.getGameTags().isEmpty()}">
-                            <tr><td>
-                                    <c:forEach items="${game.value.getGameTags()}" var="tag">
-                                        <form action="Public" method="post">
-                                            <input type="hidden" name="action" value="singleTagFilter">
-                                            <input type="hidden" name="tagID" value="${tag.key}">
-                                            <input type="submit" value="${tag.value.getTagName()}">
-                                        </form>
-                                    </c:forEach>
-                                </td></tr>
-                            </c:if>
-                    </div>
-                </c:forEach>
-            </table>
-        </div>
+        <table>
+            <c:forEach items="${catalog}" var="game">
+                <%@include file="WEB-INF/jspf/catalogGame.jspf" %>
+            </c:forEach>
+        </table>
         <div>
             <c:if test="${!errors.isEmpty() || errors != null}">
                 <ul>

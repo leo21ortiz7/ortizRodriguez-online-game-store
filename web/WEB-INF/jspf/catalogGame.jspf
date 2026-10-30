@@ -1,0 +1,31 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ page pageEncoding="UTF-8" %>
+<tr>
+    <td>
+        <a href="Private?action=viewGame&amp;gameID=${game.key}">
+            <img src="ImageProcess?imageParam=cover&amp;gameID=${game.key}"
+                 width="150"
+                 height="200"
+                 alt="View game">
+        </a>
+    </td>
+</tr>
+
+<tr><td><a href="Private?action=viewGame&amp;gameID=<c:out value='${game.key}'/>">${game.value.getGameTitle()}</a> | 
+        <a href="Private?action=viewDev&amp;devID=<c:out value='${game.value.getUser().getUserID()}'/>">${game.value.getUser().getUsername()}</a></td></tr>
+
+<tr><td>$${game.value.getGamePrice()}</td></tr>
+
+<c:if test="${!game.value.getGameTags().isEmpty()}">
+    <tr>
+        <td>
+            <c:forEach items="${game.value.getGameTags()}" var="tag">
+                <form action="Public" method="post">
+                    <input type="hidden" name="action" value="singleTagFilter">
+                    <input type="hidden" name="tagID" value="${tag.key}">
+                    <input type="submit" value="${tag.value.getTagName()}">
+                </form>
+            </c:forEach>
+        </td>
+    </tr>
+</c:if>
