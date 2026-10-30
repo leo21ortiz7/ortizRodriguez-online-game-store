@@ -112,7 +112,7 @@ public class GameDA {
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
 
-        String query = "DELETE FROM User "
+        String query = "DELETE FROM games "
                 + "WHERE game_id = ?";
 
         ps = connection.prepareStatement(query);

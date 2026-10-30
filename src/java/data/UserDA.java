@@ -75,7 +75,7 @@ public class UserDA {
         Connection connection = pool.getConnection();
         PreparedStatement ps = null;
 
-        String query = "DELETE FROM User "
+        String query = "DELETE FROM users "
                 + "WHERE user_id = ?";
 
         ps = connection.prepareStatement(query);
