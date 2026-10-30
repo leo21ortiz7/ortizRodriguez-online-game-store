@@ -1,10 +1,5 @@
-<%-- 
-    Document   : devBio
-    Created on : Oct 19, 2026, 3:40:00 PM
-    Author     : leo21
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,7 +7,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
-        <h2>${username}</h2>
+        <h1><c:out value="${developer.getUsername()}"/></h1>
+        
     </body>
 </html>

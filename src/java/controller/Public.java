@@ -60,6 +60,7 @@ public class Public extends HttpServlet {
         try {
             switch (action) {
                 case "viewLogin": {
+                    session.setAttribute("myUser", null);
                     url = "/login.jsp";
                     break;
                 }

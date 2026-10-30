@@ -28,7 +28,7 @@
         <!-- Developer -->
         <p>
             <strong>Developer:</strong>
-            <c:out value="${game.getUser().getUsername()}"/>
+            <a href="Private?action=viewDev&amp;devID=<c:out value='${game.getUser().getUserID()}'/>"><c:out value="${game.getUser().getUsername()}"/></a>
         </p>
 
         <!-- Price -->

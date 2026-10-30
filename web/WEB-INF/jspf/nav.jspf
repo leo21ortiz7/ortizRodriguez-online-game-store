@@ -1,3 +1,4 @@
 <%-- any content can be specified here e.g.: --%>
 <%@ page pageEncoding="UTF-8" %>
-<a href="Developer?action=viewNewGame">New Game<a/>
+<a href="Public?action=viewLogin">Log Out</a>
+<a href="Developer?action=viewNewGame">New Game</a>

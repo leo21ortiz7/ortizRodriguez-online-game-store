@@ -160,7 +160,7 @@ public class Private extends HttpServlet {
 
                     User user = UserDA.selectUser(Integer.parseInt(devID));
 
-                    request.setAttribute("username", user.getUsername());
+                    request.setAttribute("developer", user);
                     break;
                 }
 
