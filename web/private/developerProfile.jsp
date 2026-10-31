@@ -7,7 +7,20 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <%@include file="../WEB-INF/jspf/nav.jspf" %>
         <h1><c:out value="${developer.getUsername()}"/></h1>
-        
+        <%@include file="../WEB-INF/jspf/searchBar.jspf" %>
+        <form action="Private" method ="post">
+            <input type="hidden" name="action" value="multiTagFilter">
+            <%@include file="../WEB-INF/jspf/tagsList.jspf" %>
+            <br>
+            <input type="submit" value="Filter Catalog">
+        </form>
+        <br>
+        <table>
+            <c:forEach items="${devGames}" var="game">
+                <%@include file="../WEB-INF/jspf/catalogGame.jspf" %>
+            </c:forEach>
+        </table>
     </body>
 </html>

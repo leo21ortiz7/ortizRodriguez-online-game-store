@@ -164,6 +164,49 @@ public class GameDA {
         return games;
 
     }
+    
+    public static LinkedHashMap<Integer, Game> selectGamesByUserID(int userID) throws NamingException, SQLException {
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query
+                = "SELECT * FROM games "
+                + "WHERE user_id = ?";
+
+        ps = connection.prepareStatement(query);
+        ps.setInt(1, userID);
+        rs = ps.executeQuery();
+
+        LinkedHashMap<Integer, Game> games = new LinkedHashMap<>();
+        while (rs.next()) {
+            Integer gameID = rs.getInt("game_id");
+            String gameTitle = rs.getString("title");
+            String gameDescription = rs.getString("description");
+            Double gamePrice = rs.getDouble("price");
+            LocalDate releaseDate = rs.getDate("release_date") != null
+                    ? rs.getDate("release_date").toLocalDate() : null;
+            Boolean released = rs.getBoolean("released");
+            byte[] coverArt = rs.getBytes("coverart");
+            String gameFilePath = rs.getString("game_filepath");
+
+            Game game = new Game(gameID, userID, gameTitle, gameDescription, gamePrice, releaseDate, released, coverArt, gameFilePath);
+
+            // Insert tags and gallery images to game
+            game.setGameTags(TagDA.selectAllGameTags(gameID));
+            game.setGalleryImages(selectGameGalleryImages(gameID));
+
+            games.put(game.getGameID(), game);
+        }
+
+        rs.close();
+        ps.close();
+        pool.freeConnection(connection);
+
+        return games;
+
+    }
 
     public static Game selectGame(int gameID) throws NamingException, SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();

@@ -36,3 +36,9 @@
         </label>
     </c:forEach>
 </div>
+<div>
+    <lable for="inclusve">Inclusive</lable>
+    <input type="radio" id="inclusive" name="filterRestriction" value="inclusive">
+    <lable for="exclusive">Exclusive</lable>
+    <input type="radio" id="exclusive" name="filterRestriction" value="exclusive">
+</div>

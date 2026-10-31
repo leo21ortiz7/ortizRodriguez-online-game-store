@@ -159,8 +159,12 @@ public class Private extends HttpServlet {
                     String devID = request.getParameter("devID");
 
                     User user = UserDA.selectUser(Integer.parseInt(devID));
+                    
+                    LinkedHashMap<Integer, Game> devGames = new LinkedHashMap();
+                    devGames = GameDA.selectGamesByUserID(user.getUserID());
 
                     request.setAttribute("developer", user);
+                    request.setAttribute("devGames", devGames);
                     break;
                 }
 

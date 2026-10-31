@@ -19,10 +19,6 @@
         <form action="Public" method ="post">
             <input type="hidden" name="action" value="multiTagFilter">
             <%@include file="WEB-INF/jspf/tagsList.jspf" %>
-            <lable for="inclusve">Inclusive</lable>
-            <input type="radio" id="inclusive" name="filterRestriction" value="inclusive">
-            <lable for="exclusive">Exclusive</lable>
-            <input type="radio" id="exclusive" name="filterRestriction" value="exclusive">
             <br>
             <input type="submit" value="Filter Catalog">
         </form>
