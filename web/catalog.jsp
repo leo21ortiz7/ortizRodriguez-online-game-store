@@ -16,12 +16,7 @@
         <%@include file="WEB-INF/jspf/nav.jspf" %>
         <h1>Game Store</h1>
         <%@include file="WEB-INF/jspf/searchBar.jspf" %>
-        <form action="Public" method ="post">
-            <input type="hidden" name="action" value="multiTagFilter">
-            <%@include file="WEB-INF/jspf/tagsList.jspf" %>
-            <br>
-            <input type="submit" value="Filter Catalog">
-        </form>
+        <%@include file="WEB-INF/jspf/tagsList.jspf" %>
         <br>
         <table>
             <c:forEach items="${catalog}" var="game">

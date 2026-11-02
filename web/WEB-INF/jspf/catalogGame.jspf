@@ -20,7 +20,7 @@
     <tr>
         <td>
             <c:forEach items="${game.value.getGameTags()}" var="tag">
-                <form action="Public" method="post">
+                <form action="${controller}" method="post">
                     <input type="hidden" name="action" value="singleTagFilter">
                     <input type="hidden" name="tagID" value="${tag.key}">
                     <input type="submit" value="${tag.value.getTagName()}">

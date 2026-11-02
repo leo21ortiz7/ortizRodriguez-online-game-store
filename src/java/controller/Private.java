@@ -177,6 +177,7 @@ public class Private extends HttpServlet {
         }
 
         request.setAttribute("controller", "Private");
+        request.setAttribute("hideDevTerm", true);
 
         request.setAttribute("errors", errors);
 

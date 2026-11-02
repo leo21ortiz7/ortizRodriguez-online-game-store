@@ -189,6 +189,7 @@ public class Public extends HttpServlet {
         }
 
         request.setAttribute("controller", "Public");
+        request.setAttribute("hideDevTerm", false);
 
         request.setAttribute("errors", errors);
 

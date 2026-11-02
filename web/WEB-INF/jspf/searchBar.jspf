@@ -2,12 +2,12 @@
 <%@ page pageEncoding="UTF-8" %>
 <div>
     <h3>Search</h3>
-    <form action="Public" method="post">
+    <form action="${controller}" method="post">
         <input type="hidden" name="action" value="search">
         <lable for="gameTerm">Game:</lable>
         <input type="text" id="gameTerm" name="gameTerm" value="${gameTerm}">
-        <lable for="devTerm">Developer:</lable>
-        <input type="text" id="devTerm" name="devTerm" value="${devTerm}">
+        <lable for="devTerm" ${hideDevTerm ? 'hidden' : ''}>Developer:</lable>
+        <input type="text" id="devTerm" name="devTerm" value="${devTerm}" ${hideDevTerm ? 'hidden' : ''}>
         <input type="submit" value="Search" hidden>
     </form>
 </div>
