@@ -9,6 +9,7 @@
     <body>
         <%@include file="../WEB-INF/jspf/nav.jspf" %>
         <h1><c:out value="${developer.getUsername()}"/></h1>
+        <a href="<c:url value='Developer?action=viewNewGame'/>" style='background-color: green'>New Game</a>
         <%@include file="../WEB-INF/jspf/searchBar.jspf" %>
         <%@include file="../WEB-INF/jspf/tagsList.jspf" %>
         <br>
