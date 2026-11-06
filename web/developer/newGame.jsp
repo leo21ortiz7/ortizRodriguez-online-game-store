@@ -47,7 +47,7 @@
             <br><br>
 
             <!-- Release Date -->
-            <label for="release_date">Expected Release Date (can be blank):</label>
+            <label for="release_date">Expected Release Date (Today's date if left blank):</label>
             <input type="date"
                    id="release_date"
                    name="release_date">

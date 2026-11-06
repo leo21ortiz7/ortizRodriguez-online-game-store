@@ -91,7 +91,7 @@ public class Developer extends HttpServlet {
                     boolean released = request.getParameter("released") != null;
 
                     double price = Double.parseDouble(priceString);
-                    LocalDate releaseDate = releaseDateString.isEmpty() ? null : LocalDate.parse(releaseDateString);
+                    LocalDate releaseDate = releaseDateString.isEmpty() ? LocalDate.now() : LocalDate.parse(releaseDateString);
 
                     // Get cover art
                     Part coverArtPart = request.getPart("coverart");
