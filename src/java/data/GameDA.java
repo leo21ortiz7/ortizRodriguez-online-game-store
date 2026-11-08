@@ -5,6 +5,7 @@
 package data;
 
 import business.Game;
+import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -43,7 +44,7 @@ public class GameDA {
         ps.setInt(1, game.getUserID());
         ps.setString(2, game.getGameTitle());
         ps.setString(3, game.getGameDescription());
-        ps.setDouble(4, game.getGamePrice());
+        ps.setBigDecimal(4, game.getGamePrice());
         ps.setDate(5, releaseDate);
         ps.setBoolean(6, game.isReleased());
         ps.setBytes(7, game.getCoverArt());
@@ -141,7 +142,7 @@ public class GameDA {
             Integer userID = rs.getInt("user_id");
             String gameTitle = rs.getString("title");
             String gameDescription = rs.getString("description");
-            Double gamePrice = rs.getDouble("price");
+            BigDecimal gamePrice = rs.getBigDecimal("price");
             LocalDate releaseDate = rs.getDate("release_date") != null
                     ? rs.getDate("release_date").toLocalDate() : null;
             Boolean released = rs.getBoolean("released");
@@ -184,7 +185,7 @@ public class GameDA {
             Integer gameID = rs.getInt("game_id");
             String gameTitle = rs.getString("title");
             String gameDescription = rs.getString("description");
-            Double gamePrice = rs.getDouble("price");
+            BigDecimal gamePrice = rs.getBigDecimal("price");
             LocalDate releaseDate = rs.getDate("release_date") != null
                     ? rs.getDate("release_date").toLocalDate() : null;
             Boolean released = rs.getBoolean("released");
@@ -226,7 +227,7 @@ public class GameDA {
             Integer userID = rs.getInt("user_id");
             String gameTitle = rs.getString("title");
             String gameDescription = rs.getString("description");
-            Double gamePrice = rs.getDouble("price");
+            BigDecimal gamePrice = rs.getBigDecimal("price");
             LocalDate releaseDate = rs.getDate("release_date") != null
                     ? rs.getDate("release_date").toLocalDate() : null;
             Boolean released = rs.getBoolean("released");

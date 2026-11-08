@@ -11,6 +11,7 @@ import business.Tag;
 import business.User;
 import data.CartDA;
 import data.GameDA;
+import data.LibraryDA;
 import data.OrderDA;
 import data.TagDA;
 import data.UserDA;
@@ -73,7 +74,7 @@ public class Private extends HttpServlet {
 
                     if (userRoles.containsKey("CUSTOMER")) {
                         // Check ownership of game
-                        boolean ownsGame = myUser.ownsGame(game.getGameID());
+                        boolean ownsGame = LibraryDA.ownsGame(myUser.getUserID(), game.getGameID());
                         request.setAttribute("ownsGame", ownsGame);
                     }
 

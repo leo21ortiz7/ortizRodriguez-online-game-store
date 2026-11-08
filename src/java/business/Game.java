@@ -6,6 +6,7 @@ package business;
 
 import data.UserDA;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
@@ -22,7 +23,7 @@ public class Game implements Serializable {
     private String gameTitle;
     private String gameDescription;
     private LinkedHashMap<Integer, Tag> gameTags;
-    private double gamePrice;
+    private BigDecimal gamePrice;
     private LocalDate releaseDate;
     private boolean released;
     private byte[] coverArt;
@@ -36,7 +37,7 @@ public class Game implements Serializable {
     public Game(int userID, 
                 String gameTitle, 
                 String gameDescription, 
-                double gamePrice, 
+                BigDecimal gamePrice, 
                 LocalDate releaseDate, 
                 boolean released, 
                 byte[] coverArt, 
@@ -56,7 +57,7 @@ public class Game implements Serializable {
                 int userID, 
                 String gameTitle, 
                 String gameDescription, 
-                double gamePrice, 
+                BigDecimal gamePrice, 
                 LocalDate releaseDate, 
                 boolean released, 
                 byte[] coverArt, 
@@ -78,7 +79,7 @@ public class Game implements Serializable {
                 String gameTitle, 
                 String gameDescription, 
                 LinkedHashMap<Integer, Tag> gameTags, 
-                double gamePrice, 
+                BigDecimal gamePrice, 
                 LocalDate releaseDate, 
                 boolean released, 
                 byte[] coverArt, 
@@ -139,11 +140,11 @@ public class Game implements Serializable {
     
     
 
-    public double getGamePrice() {
+    public BigDecimal getGamePrice() {
         return gamePrice;
     }
 
-    public void setGamePrice(double gamePrice) {
+    public void setGamePrice(BigDecimal gamePrice) {
         this.gamePrice = gamePrice;
     }
 

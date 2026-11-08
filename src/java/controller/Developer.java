@@ -11,6 +11,7 @@ import data.GameDA;
 import data.TagDA;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -90,7 +91,7 @@ public class Developer extends HttpServlet {
                     // Checkbox will be null when unchecked
                     boolean released = request.getParameter("released") != null;
 
-                    double price = Double.parseDouble(priceString);
+                    BigDecimal price = new BigDecimal(priceString);
                     LocalDate releaseDate = releaseDateString.isEmpty() ? LocalDate.now() : LocalDate.parse(releaseDateString);
 
                     // Get cover art

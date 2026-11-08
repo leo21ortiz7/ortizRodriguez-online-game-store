@@ -1,182 +1,455 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package data;
 
-import business.Game;
 import business.Order;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.sql.Date;
+import business.OrderItem;
+import java.sql.*;
 import java.util.LinkedHashMap;
 import javax.naming.NamingException;
 
-/**
- *
- * @author leo21
- */
 public class OrderDA {
 
+    // INSERT ORDER
     public static int insertOrder(Order order)
             throws NamingException, SQLException {
 
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
-        PreparedStatement ps = null;
 
-        String query
-                = "INSERT INTO orders (user_id, game_id, order_date) "
-                + "VALUES (?, ?, ?)";
+        String query = "INSERT INTO orders "
+                + "(user_id, order_date, total_amount, currency, order_status) "
+                + "VALUES (?, ?, ?, ?, ?)";
 
-        ps = connection.prepareStatement(query);
+        try {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    query, Statement.RETURN_GENERATED_KEYS)) {
 
-        ps.setInt(1, order.getUserID());
-        ps.setInt(2, order.getGameID());
-        ps.setDate(3, Date.valueOf(order.getOrderDate()));
+                ps.setInt(1, order.getUserID());
+                ps.setTimestamp(2, order.getOrderDate());
+                ps.setBigDecimal(3, order.getTotalAmount());
+                ps.setString(4, order.getCurrency());
+                ps.setString(5, order.getOrderStatus());
 
-        int rows = ps.executeUpdate();
+                ps.executeUpdate();
 
-        ps.close();
-        pool.freeConnection(connection);
-
-        return rows;
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        int orderID = rs.getInt(1);
+                        order.setOrderID(orderID);
+                        return orderID;
+                    }
+                }
+            }
+            return -1;
+        } finally {
+            pool.freeConnection(connection);
+        }
     }
 
-    public static int deleteOrder(int orderID)
+    public static int insertOrder(Connection connection, Order order)
+            throws SQLException {
+
+        String query = "INSERT INTO orders "
+                + "(user_id, order_date, total_amount, currency, order_status) "
+                + "VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(
+                query, Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setInt(1, order.getUserID());
+            ps.setTimestamp(2, order.getOrderDate());
+            ps.setBigDecimal(3, order.getTotalAmount());
+            ps.setString(4, order.getCurrency());
+            ps.setString(5, order.getOrderStatus());
+
+            ps.executeUpdate();
+
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    // UPDATE ORDER
+    public static void updateOrder(Order order)
             throws NamingException, SQLException {
 
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
-        PreparedStatement ps = null;
 
-        String query
-                = "DELETE FROM orders "
+        String query = "UPDATE orders SET user_id = ?, order_date = ?, "
+                + "total_amount = ?, currency = ?, order_status = ? "
                 + "WHERE order_id = ?";
 
-        ps = connection.prepareStatement(query);
+        try {
+            try (PreparedStatement ps = connection.prepareStatement(query)) {
+                ps.setInt(1, order.getUserID());
+                ps.setTimestamp(2, order.getOrderDate());
+                ps.setBigDecimal(3, order.getTotalAmount());
+                ps.setString(4, order.getCurrency());
+                ps.setString(5, order.getOrderStatus());
+                ps.setInt(6, order.getOrderID());
 
-        ps.setInt(1, orderID);
-
-        int rows = ps.executeUpdate();
-
-        ps.close();
-        pool.freeConnection(connection);
-
-        return rows;
+                ps.executeUpdate();
+            }
+        } finally {
+            pool.freeConnection(connection);
+        }
     }
 
+    // DELETE ORDER
+    public static void deleteOrder(int orderID)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+
+        String query = "DELETE FROM orders WHERE order_id = ?";
+
+        try {
+            try (PreparedStatement ps = connection.prepareStatement(query)) {
+                ps.setInt(1, orderID);
+                ps.executeUpdate();
+            }
+        } finally {
+            pool.freeConnection(connection);
+        }
+    }
+
+    // SELECT ORDER BY ID
     public static Order selectOrder(int orderID)
             throws NamingException, SQLException {
 
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
 
-        String query
-                = "SELECT order_id, user_id, game_id, order_date "
-                + "FROM orders "
-                + "WHERE order_id = ?";
+        String query = "SELECT * FROM orders WHERE order_id = ?";
 
-        ps = connection.prepareStatement(query);
+        try {
+            try (PreparedStatement ps = connection.prepareStatement(query)) {
+                ps.setInt(1, orderID);
 
-        ps.setInt(1, orderID);
-
-        rs = ps.executeQuery();
-
-        Order order = null;
-
-        if (rs.next()) {
-            
-            int userID = rs.getInt("user_id");
-            int gameID = rs.getInt("game_id");
-            LocalDate date = rs.getDate("order_date").toLocalDate();
-
-            order = new Order(orderID, userID, gameID, date);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return mapOrder(rs);
+                    }
+                }
+            }
+            return null;
+        } finally {
+            pool.freeConnection(connection);
         }
-
-        rs.close();
-        ps.close();
-        pool.freeConnection(connection);
-
-        return order;
     }
 
-    public static LinkedHashMap<Integer, Order> selectAllGameOrders(int userID)
-            throws NamingException, SQLException {
-
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        String query
-                = "SELECT * "
-                + "FROM orders "
-                + "WHERE user_id = ?";
-
-        ps = connection.prepareStatement(query);
-
-        ps.setInt(1, userID);
-
-        rs = ps.executeQuery();
-
-        LinkedHashMap<Integer, Order> orders = new LinkedHashMap<>();
-
-        while (rs.next()) {
-
-            int orderID = rs.getInt("order_id");
-            int gameID = rs.getInt("game_id");
-            LocalDate date = rs.getDate("order_date").toLocalDate();
-
-            Order order = new Order(orderID, userID, gameID, date);
-
-            orders.put(orderID, order);
-        }
-
-        rs.close();
-        ps.close();
-        pool.freeConnection(connection);
-
-        return orders;
-    }
-    
+    // SELECT ALL ORDERS
     public static LinkedHashMap<Integer, Order> selectAllOrders()
             throws NamingException, SQLException {
 
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        String query = "SELECT * FROM orders";
-
-        ps = connection.prepareStatement(query);
-
-        rs = ps.executeQuery();
 
         LinkedHashMap<Integer, Order> orders = new LinkedHashMap<>();
 
-        while (rs.next()) {
+        String query = "SELECT * FROM orders";
 
-            int orderID = rs.getInt("order_id");
-            int userID = rs.getInt("user_id");
-            int gameID = rs.getInt("game_id");
-            LocalDate date = rs.getDate("order_date").toLocalDate();
+        try {
+            try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
 
-            Order order = new Order(orderID, userID, gameID, date);
+                while (rs.next()) {
+                    Order order = mapOrder(rs);
+                    orders.put(order.getOrderID(), order);
+                }
+            }
+            return orders;
+        } finally {
+            pool.freeConnection(connection);
+        }
+    }
 
-            orders.put(orderID, order);
+    // SELECT ORDERS BY USER ID
+    public static LinkedHashMap<Integer, Order> selectOrdersByUserID(int userID)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+
+        LinkedHashMap<Integer, Order> orders = new LinkedHashMap<>();
+
+        String query = "SELECT * FROM orders WHERE user_id = ?";
+
+        try {
+            try (PreparedStatement ps = connection.prepareStatement(query)) {
+                ps.setInt(1, userID);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        Order order = mapOrder(rs);
+                        orders.put(order.getOrderID(), order);
+                    }
+                }
+            }
+            return orders;
+        } finally {
+            pool.freeConnection(connection);
+        }
+    }
+
+    // MAP ORDER
+    private static Order mapOrder(ResultSet rs) throws SQLException {
+
+        Order order = new Order();
+
+        order.setOrderID(rs.getInt("order_id"));
+        order.setUserID(rs.getInt("user_id"));
+        order.setOrderDate(rs.getTimestamp("order_date"));
+        order.setTotalAmount(rs.getBigDecimal("total_amount"));
+        order.setCurrency(rs.getString("currency"));
+        order.setOrderStatus(rs.getString("order_status"));
+
+        return order;
+    }
+
+    // INSERT ORDER ITEM
+    public static int insertOrderItem(OrderItem item)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+
+        String query = "INSERT INTO order_items "
+                + "(order_id, game_id, unit_price) VALUES (?, ?, ?)";
+
+        try {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    query, Statement.RETURN_GENERATED_KEYS)) {
+
+                ps.setInt(1, item.getOrderID());
+                ps.setInt(2, item.getGameID());
+                ps.setBigDecimal(3, item.getUnitPrice());
+
+                ps.executeUpdate();
+
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        int orderItemID = rs.getInt(1);
+                        item.setOrderItemID(orderItemID);
+                        return orderItemID;
+                    }
+                }
+            }
+            return -1;
+        } finally {
+            pool.freeConnection(connection);
+        }
+    }
+
+    public static int insertOrderItem(Connection connection, OrderItem orderItem)
+            throws SQLException {
+
+        String query = "INSERT INTO order_items "
+                + "(order_id, game_id, unit_price) "
+                + "VALUES (?, ?, ?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(
+                query, Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setInt(1, orderItem.getOrderID());
+            ps.setInt(2, orderItem.getGameID());
+            ps.setBigDecimal(3, orderItem.getUnitPrice());
+
+            ps.executeUpdate();
+
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
         }
 
-        rs.close();
-        ps.close();
-        pool.freeConnection(connection);
+        return -1;
+    }
 
-        return orders;
+    // UPDATE ORDER ITEM
+    public static void updateOrderItem(OrderItem item)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+
+        String query = "UPDATE order_items SET order_id = ?, "
+                + "game_id = ?, unit_price = ? WHERE order_item_id = ?";
+
+        try {
+            try (PreparedStatement ps = connection.prepareStatement(query)) {
+                ps.setInt(1, item.getOrderID());
+                ps.setInt(2, item.getGameID());
+                ps.setBigDecimal(3, item.getUnitPrice());
+                ps.setInt(4, item.getOrderItemID());
+
+                ps.executeUpdate();
+            }
+        } finally {
+            pool.freeConnection(connection);
+        }
+    }
+
+    // DELETE ORDER ITEM
+    public static void deleteOrderItem(int orderItemID)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+
+        String query = "DELETE FROM order_items WHERE order_item_id = ?";
+
+        try {
+            try (PreparedStatement ps = connection.prepareStatement(query)) {
+                ps.setInt(1, orderItemID);
+                ps.executeUpdate();
+            }
+        } finally {
+            pool.freeConnection(connection);
+        }
+    }
+
+    // DELETE ALL ORDER ITEMS BY ORDER ID
+    public static void deleteOrderItemsByOrderID(int orderID)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+
+        String query = "DELETE FROM order_items WHERE order_id = ?";
+
+        try {
+            try (PreparedStatement ps = connection.prepareStatement(query)) {
+                ps.setInt(1, orderID);
+                ps.executeUpdate();
+            }
+        } finally {
+            pool.freeConnection(connection);
+        }
+    }
+
+    // SELECT ORDER ITEM BY ID
+    public static OrderItem selectOrderItem(int orderItemID)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+
+        String query = "SELECT * FROM order_items WHERE order_item_id = ?";
+
+        try {
+            try (PreparedStatement ps = connection.prepareStatement(query)) {
+                ps.setInt(1, orderItemID);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return mapOrderItem(rs);
+                    }
+                }
+            }
+            return null;
+        } finally {
+            pool.freeConnection(connection);
+        }
+    }
+
+    // SELECT ALL ORDER ITEMS
+    public static LinkedHashMap<Integer, OrderItem> selectAllOrderItems()
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+
+        LinkedHashMap<Integer, OrderItem> items = new LinkedHashMap<>();
+
+        String query = "SELECT * FROM order_items";
+
+        try {
+            try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    OrderItem item = mapOrderItem(rs);
+                    items.put(item.getOrderItemID(), item);
+                }
+            }
+            return items;
+        } finally {
+            pool.freeConnection(connection);
+        }
+    }
+
+    // SELECT ORDER ITEMS BY ORDER ID
+    public static LinkedHashMap<Integer, OrderItem> selectOrderItemsByOrderID(
+            int orderID) throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+
+        LinkedHashMap<Integer, OrderItem> items = new LinkedHashMap<>();
+
+        String query = "SELECT * FROM order_items WHERE order_id = ?";
+
+        try {
+            try (PreparedStatement ps = connection.prepareStatement(query)) {
+                ps.setInt(1, orderID);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        OrderItem item = mapOrderItem(rs);
+                        items.put(item.getOrderItemID(), item);
+                    }
+                }
+            }
+            return items;
+        } finally {
+            pool.freeConnection(connection);
+        }
+    }
+
+    // SELECT ORDER ITEMS BY GAME ID
+    public static LinkedHashMap<Integer, OrderItem> selectOrderItemsByGameID(
+            int gameID) throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+
+        LinkedHashMap<Integer, OrderItem> items = new LinkedHashMap<>();
+
+        String query = "SELECT * FROM order_items WHERE game_id = ?";
+
+        try {
+            try (PreparedStatement ps = connection.prepareStatement(query)) {
+                ps.setInt(1, gameID);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        OrderItem item = mapOrderItem(rs);
+                        items.put(item.getOrderItemID(), item);
+                    }
+                }
+            }
+            return items;
+        } finally {
+            pool.freeConnection(connection);
+        }
+    }
+
+    // MAP ORDER ITEM
+    private static OrderItem mapOrderItem(ResultSet rs) throws SQLException {
+
+        OrderItem item = new OrderItem();
+
+        item.setOrderItemID(rs.getInt("order_item_id"));
+        item.setOrderID(rs.getInt("order_id"));
+        item.setGameID(rs.getInt("game_id"));
+        item.setUnitPrice(rs.getBigDecimal("unit_price"));
+
+        return item;
     }
 }

@@ -94,7 +94,7 @@ public class CartDA {
                     rs.getInt("user_id"),
                     rs.getString("title"),
                     rs.getString("description"),
-                    rs.getDouble("price"),
+                    rs.getBigDecimal("price"),
                     rs.getDate("release_date") != null
                     ? rs.getDate("release_date").toLocalDate() : null,
                     rs.getBoolean("released"),
@@ -140,7 +140,7 @@ public class CartDA {
                     rs.getInt("user_id"),
                     rs.getString("title"),
                     rs.getString("description"),
-                    rs.getDouble("price"),
+                    rs.getBigDecimal("price"),
                     rs.getDate("release_date") != null
                     ? rs.getDate("release_date").toLocalDate() : null,
                     rs.getBoolean("released"),
@@ -187,7 +187,7 @@ public class CartDA {
                     rs.getInt("user_id"),
                     rs.getString("title"),
                     rs.getString("description"),
-                    rs.getDouble("price"),
+                    rs.getBigDecimal("price"),
                     rs.getDate("release_date") != null
                     ? rs.getDate("release_date").toLocalDate() : null,
                     rs.getBoolean("released"),
@@ -233,7 +233,7 @@ public class CartDA {
                     rs.getInt("user_id"),
                     rs.getString("title"),
                     rs.getString("description"),
-                    rs.getDouble("price"),
+                    rs.getBigDecimal("price"),
                     rs.getDate("release_date") != null
                     ? rs.getDate("release_date").toLocalDate() : null,
                     rs.getBoolean("released"),
