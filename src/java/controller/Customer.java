@@ -10,6 +10,7 @@ import data.GameDA;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
@@ -61,7 +62,12 @@ public class Customer extends HttpServlet {
                 case "checkoutGame": {
                     String gameID = request.getParameter("gameID");
                     Game game = GameDA.selectGame(Integer.parseInt(gameID));
-                    request.setAttribute("game", game);
+                    
+                    LinkedHashMap<Integer, Game> checkoutGames = new LinkedHashMap();
+                    checkoutGames.put(game.getGameID(), game);
+                    
+                    request.setAttribute("checkoutGames", checkoutGames);
+                    request.setAttribute("totalPrice", game.getGamePrice());
                     url = "/customer/checkout.jsp";
                 }
 
