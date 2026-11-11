@@ -3,8 +3,8 @@ package business;
 import data.UserDA;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
@@ -13,7 +13,7 @@ public class Order implements Serializable {
 
     private int orderID;
     private int userID;
-    private Timestamp orderDate;
+    private LocalDateTime orderDate;
     private BigDecimal totalAmount;
     private String currency;
     private String orderStatus;
@@ -21,7 +21,7 @@ public class Order implements Serializable {
     public Order() {
     }
 
-    public Order(int userID, Timestamp orderDate,
+    public Order(int userID, LocalDateTime orderDate,
             BigDecimal totalAmount, String currency, String orderStatus) {
         this.userID = userID;
         this.orderDate = orderDate;
@@ -55,11 +55,11 @@ public class Order implements Serializable {
         return null;
     }
 
-    public Timestamp getOrderDate() {
+    public LocalDateTime getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Timestamp orderDate) {
+    public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
     }
 

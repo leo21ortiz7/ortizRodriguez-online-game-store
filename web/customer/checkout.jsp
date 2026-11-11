@@ -24,10 +24,11 @@
         <form action="Customer" method="post">
             <input type="hidden" name="action" value="purchase">
         </form>
-        <form action="#" method="post">
+        <form action="Customer" method="post">
 
             <h1>Payment form</h1>
             <!-- Credit: https://web.dev/articles/payment-and-address-form-best-practices -->
+            <input type="hidden" name="action" value="completePurchase"
             <section>
                 <label for="cc-number">Card number</label>
                 <!-- Allow for spaces and for shorter and longer payment card numbers -->
@@ -58,7 +59,7 @@
 
 
 
-            <button id="complete-payment">Complete payment</button>
+            <button id="complete-payment" type="submit">Complete payment</button>
 
             <p>NB: data entered in this form is not stored or shared.</p>
 

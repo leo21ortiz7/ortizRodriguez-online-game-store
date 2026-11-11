@@ -3,8 +3,8 @@ package business;
 import data.OrderDA;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
@@ -18,14 +18,14 @@ public class Payment implements Serializable {
     private BigDecimal paymentAmount;
     private String currency;
     private String paymentStatus;
-    private Timestamp paymentDate;
+    private LocalDateTime paymentDate;
 
     public Payment() {
     }
 
     public Payment(int orderID, String paymentProvider,
             String transactionID, BigDecimal paymentAmount,
-            String currency, String paymentStatus, Timestamp paymentDate) {
+            String currency, String paymentStatus, LocalDateTime paymentDate) {
         this.orderID = orderID;
         this.paymentProvider = paymentProvider;
         this.transactionID = transactionID;
@@ -100,11 +100,11 @@ public class Payment implements Serializable {
         this.paymentStatus = paymentStatus;
     }
 
-    public Timestamp getPaymentDate() {
+    public LocalDateTime getPaymentDate() {
         return paymentDate;
     }
 
-    public void setPaymentDate(Timestamp paymentDate) {
+    public void setPaymentDate(LocalDateTime paymentDate) {
         this.paymentDate = paymentDate;
     }
 }

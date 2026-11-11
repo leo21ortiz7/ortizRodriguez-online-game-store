@@ -66,9 +66,13 @@ public class Customer extends HttpServlet {
                     LinkedHashMap<Integer, Game> checkoutGames = new LinkedHashMap();
                     checkoutGames.put(game.getGameID(), game);
                     
-                    request.setAttribute("checkoutGames", checkoutGames);
+                    session.setAttribute("checkoutGames", checkoutGames);
                     request.setAttribute("totalPrice", game.getGamePrice());
                     url = "/customer/checkout.jsp";
+                }
+                
+                case "completePurchase": {
+                    
                 }
 
             }

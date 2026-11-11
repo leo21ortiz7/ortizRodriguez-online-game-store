@@ -152,7 +152,7 @@
             </form>
 
         </c:if>
-            
-            <script src="${pageContext.request.contextPath}/js/asyncActions.js"></script>
+
+        <script src="${pageContext.request.contextPath}/js/asyncActions.js"></script>
     </body>
 </html>

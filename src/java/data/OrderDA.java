@@ -24,7 +24,7 @@ public class OrderDA {
                     query, Statement.RETURN_GENERATED_KEYS)) {
 
                 ps.setInt(1, order.getUserID());
-                ps.setTimestamp(2, order.getOrderDate());
+                ps.setTimestamp(2, Timestamp.valueOf(order.getOrderDate()));
                 ps.setBigDecimal(3, order.getTotalAmount());
                 ps.setString(4, order.getCurrency());
                 ps.setString(5, order.getOrderStatus());
@@ -56,7 +56,7 @@ public class OrderDA {
                 query, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setInt(1, order.getUserID());
-            ps.setTimestamp(2, order.getOrderDate());
+            ps.setTimestamp(2, Timestamp.valueOf(order.getOrderDate()));
             ps.setBigDecimal(3, order.getTotalAmount());
             ps.setString(4, order.getCurrency());
             ps.setString(5, order.getOrderStatus());
@@ -87,7 +87,7 @@ public class OrderDA {
         try {
             try (PreparedStatement ps = connection.prepareStatement(query)) {
                 ps.setInt(1, order.getUserID());
-                ps.setTimestamp(2, order.getOrderDate());
+                ps.setTimestamp(2, Timestamp.valueOf(order.getOrderDate()));
                 ps.setBigDecimal(3, order.getTotalAmount());
                 ps.setString(4, order.getCurrency());
                 ps.setString(5, order.getOrderStatus());
@@ -204,7 +204,7 @@ public class OrderDA {
 
         order.setOrderID(rs.getInt("order_id"));
         order.setUserID(rs.getInt("user_id"));
-        order.setOrderDate(rs.getTimestamp("order_date"));
+        order.setOrderDate(rs.getTimestamp("order_date").toLocalDateTime());
         order.setTotalAmount(rs.getBigDecimal("total_amount"));
         order.setCurrency(rs.getString("currency"));
         order.setOrderStatus(rs.getString("order_status"));

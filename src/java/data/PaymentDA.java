@@ -29,7 +29,7 @@ public class PaymentDA {
                 ps.setBigDecimal(4, payment.getPaymentAmount());
                 ps.setString(5, payment.getCurrency());
                 ps.setString(6, payment.getPaymentStatus());
-                ps.setTimestamp(7, payment.getPaymentDate());
+                ps.setTimestamp(7, Timestamp.valueOf(payment.getPaymentDate()));
 
                 ps.executeUpdate();
 
@@ -66,7 +66,7 @@ public class PaymentDA {
             ps.setString(6, payment.getPaymentStatus());
 
             if (payment.getPaymentDate() != null) {
-                ps.setTimestamp(7, payment.getPaymentDate());
+                ps.setTimestamp(7, Timestamp.valueOf(payment.getPaymentDate()));
             } else {
                 ps.setNull(7, Types.TIMESTAMP);
             }
@@ -103,7 +103,7 @@ public class PaymentDA {
                 ps.setBigDecimal(4, payment.getPaymentAmount());
                 ps.setString(5, payment.getCurrency());
                 ps.setString(6, payment.getPaymentStatus());
-                ps.setTimestamp(7, payment.getPaymentDate());
+                ps.setTimestamp(7, Timestamp.valueOf(payment.getPaymentDate()));
                 ps.setInt(8, payment.getPaymentID());
 
                 ps.executeUpdate();
@@ -275,7 +275,7 @@ public class PaymentDA {
         payment.setPaymentAmount(rs.getBigDecimal("payment_amount"));
         payment.setCurrency(rs.getString("currency"));
         payment.setPaymentStatus(rs.getString("payment_status"));
-        payment.setPaymentDate(rs.getTimestamp("payment_date"));
+        payment.setPaymentDate(rs.getTimestamp("payment_date").toLocalDateTime());
 
         return payment;
     }
