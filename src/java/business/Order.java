@@ -21,6 +21,13 @@ public class Order implements Serializable {
     public Order() {
     }
 
+    public Order(int userID, LocalDateTime orderDate, String currency, String orderStatus) {
+        this.userID = userID;
+        this.orderDate = orderDate;
+        this.currency = currency;
+        this.orderStatus = orderStatus;
+    }
+
     public Order(int userID, LocalDateTime orderDate,
             BigDecimal totalAmount, String currency, String orderStatus) {
         this.userID = userID;

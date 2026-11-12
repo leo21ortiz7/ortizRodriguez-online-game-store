@@ -5,10 +5,13 @@
 package controller;
 
 import business.Game;
+import business.Order;
+import business.Payment;
 import business.User;
 import data.GameDA;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.logging.Level;
@@ -19,6 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import util.Checkout;
 
 /**
  *
@@ -67,12 +71,27 @@ public class Customer extends HttpServlet {
                     checkoutGames.put(game.getGameID(), game);
                     
                     session.setAttribute("checkoutGames", checkoutGames);
-                    request.setAttribute("totalPrice", game.getGamePrice());
+                    session.setAttribute("totalPrice", game.getGamePrice());
                     url = "/customer/checkout.jsp";
+                    break;
                 }
                 
                 case "completePurchase": {
+                    Order order = new Order();
+                    order.setUserID(myUser.getUserID());
+                    order.setOrderDate(LocalDateTime.now());
+                    Payment payment = new Payment();
+                    payment.setPaymentDate(LocalDateTime.now());
                     
+                    LinkedHashMap<Integer, Game> purchaseGames 
+                            = (LinkedHashMap<Integer, Game>) session.getAttribute("checkoutGames");
+                    
+                    int orderID = Checkout.checkout(order, payment, purchaseGames);
+                    int itemCount = purchaseGames.size();
+                    
+                    request.setAttribute("orderID", orderID);
+                    request.setAttribute("itemCount", itemCount);
+                    url = "/customer/receipt.jsp";
                 }
 
             }
@@ -83,7 +102,7 @@ public class Customer extends HttpServlet {
             LOG.log(Level.SEVERE, null, ex);
         }
 
-        request.setAttribute("controller", "Private");
+        request.setAttribute("controller", "Customer");
 
         request.setAttribute("errors", errors);
 
