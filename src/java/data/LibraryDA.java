@@ -251,9 +251,9 @@ public class LibraryDA {
     }
 
     // MAP GAME
-    private static Game mapGame(ResultSet rs) throws SQLException {
+    private static Game mapGame(ResultSet rs) throws SQLException, NamingException {
 
-        return new Game(
+        Game game = new Game(
                 rs.getInt("game_id"),
                 rs.getInt("user_id"),
                 rs.getString("title"),
@@ -265,5 +265,7 @@ public class LibraryDA {
                 rs.getBytes("coverart"),
                 rs.getString("game_filepath")
         );
+        game.setGameTags(TagDA.selectAllGameTags((rs.getInt("game_id"))));
+        return game;
     }
 }

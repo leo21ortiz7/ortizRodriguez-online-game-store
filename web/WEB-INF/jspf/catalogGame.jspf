@@ -18,7 +18,7 @@
 
 <tr><td>$${game.value.getGamePrice()}</td></tr>
 
-<c:if test="${!game.value.getGameTags().isEmpty()}">
+<c:if test="${!game.value.getGameTags().isEmpty() && showTags != false}">
     <tr>
         <td>
             <c:forEach items="${game.value.getGameTags()}" var="tag">

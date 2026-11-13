@@ -67,7 +67,6 @@ public class Customer extends HttpServlet {
                 case"viewLibrary": {
                     LinkedHashMap<Integer, Game> libraryGames = LibraryDA.selectLibrary(myUser.getUserID());
                     session.setAttribute("libraryGames", libraryGames);
-                    
                     url = "/customer/library.jsp";
                     break;
                 }
@@ -75,10 +74,13 @@ public class Customer extends HttpServlet {
                 case "checkoutGame": {
                     String gameID = request.getParameter("gameID");
                     Game game = GameDA.selectGame(Integer.parseInt(gameID));
+                    //game.setGameTags(null);
+                    
                     
                     LinkedHashMap<Integer, Game> checkoutGames = new LinkedHashMap();
                     checkoutGames.put(game.getGameID(), game);
                     
+                    request.setAttribute("showTags", false);
                     session.setAttribute("checkoutGames", checkoutGames);
                     session.setAttribute("totalPrice", game.getGamePrice());
                     url = "/customer/checkout.jsp";
