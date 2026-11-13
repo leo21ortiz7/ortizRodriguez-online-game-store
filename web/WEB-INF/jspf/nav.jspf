@@ -3,4 +3,5 @@
 <nav>
     <a href="<c:url value='Public?action=viewLogin'/>">Log Out</a>
     <a href="<c:url value='Developer?action=viewNewGame'/>">New Game</a>
+    <a href="<c:url value='Customer?action=viewLibrary'/>">Library</a>
 </nav>

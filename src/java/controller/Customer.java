@@ -9,6 +9,7 @@ import business.Order;
 import business.Payment;
 import business.User;
 import data.GameDA;
+import data.LibraryDA;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -60,6 +61,14 @@ public class Customer extends HttpServlet {
             switch (action) {
                 case "viewCustomerHome": {
                     url = "/customer/customerHome.jsp";
+                    break;
+                }
+                
+                case"viewLibrary": {
+                    LinkedHashMap<Integer, Game> libraryGames = LibraryDA.selectLibrary(myUser.getUserID());
+                    session.setAttribute("libraryGames", libraryGames);
+                    
+                    url = "/customer/library.jsp";
                     break;
                 }
                 
