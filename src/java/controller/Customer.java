@@ -8,13 +8,16 @@ import business.Game;
 import business.Order;
 import business.Payment;
 import business.User;
+import data.CartDA;
 import data.GameDA;
 import data.LibraryDA;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.function.BiConsumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
@@ -64,25 +67,41 @@ public class Customer extends HttpServlet {
                     break;
                 }
                 
-                case"viewLibrary": {
+                case "viewLibrary": {
                     LinkedHashMap<Integer, Game> libraryGames = LibraryDA.selectLibrary(myUser.getUserID());
                     session.setAttribute("libraryGames", libraryGames);
                     url = "/customer/library.jsp";
                     break;
                 }
                 
+                case "viewCart": {
+                    LinkedHashMap<Integer, Game> cartGames = CartDA.selectUserCartGames(myUser.getUserID());
+                    
+                    BigDecimal totalPrice = BigDecimal.ZERO;
+                    cartGames.forEach((key, value) -> totalPrice.add(value.getGamePrice()));
+                    
+                    session.setAttribute("cartGames", cartGames);
+                    session.setAttribute("totalPrice", totalPrice);
+                    url = "customer.cart.jsp";
+                    break;
+                }
+                
+                // HANDLE CHECKOUT
                 case "checkoutGame": {
                     String gameID = request.getParameter("gameID");
                     Game game = GameDA.selectGame(Integer.parseInt(gameID));
-                    //game.setGameTags(null);
-                    
                     
                     LinkedHashMap<Integer, Game> checkoutGames = new LinkedHashMap();
                     checkoutGames.put(game.getGameID(), game);
-                    
+                }
+                
+                case "checkoutCart": {
+                    LinkedHashMap<Integer, Game> checkoutGames = (LinkedHashMap<Integer, Game>) session.getAttribute("cartGames");
+                                        
                     request.setAttribute("showTags", false);
                     session.setAttribute("checkoutGames", checkoutGames);
-                    session.setAttribute("totalPrice", game.getGamePrice());
+                    //FIX
+                    //session.setAttribute("totalPrice", game.getGamePrice());
                     url = "/customer/checkout.jsp";
                     break;
                 }

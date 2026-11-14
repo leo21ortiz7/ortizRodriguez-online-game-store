@@ -98,7 +98,6 @@
         </p>
 
         <!-- Customer Controls -->
-        <!-- TODO: Make foreach -->
         <c:if test="${userRoles.containsKey('CUSTOMER')}">
 
             <c:choose>
