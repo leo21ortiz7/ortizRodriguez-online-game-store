@@ -128,7 +128,14 @@
                     <form action="Private" method="post">
                         <input type="hidden" name="action" value="checkoutGame">
                         <input type="hidden" name="gameID" value="${game.gameID}">
-                        <button type="submit">Buy Now</button>
+                        <c:choose>
+                            <c:when test="${game.isReleased()}">
+                                <button type="submit">Buy Now</button>
+                            </c:when>
+                            <c:otherwise>
+                                <button type="submit">Preorder Now</button>
+                            </c:otherwise>
+                        </c:choose>
                     </form>
 
                 </c:otherwise>

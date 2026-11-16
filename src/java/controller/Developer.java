@@ -70,6 +70,7 @@ public class Developer extends HttpServlet {
                 url = "/developer/newGame.jsp";
                 try {
                     request.setAttribute("tags", TagDA.selectAllTags());
+                    request.setAttribute("showTagControls", false);
                 } catch (SQLException | NamingException ex) {
                     errors.add("Server down. Try again later.");
                     LOG.log(Level.SEVERE, "*** Server Error", ex);
@@ -78,8 +79,6 @@ public class Developer extends HttpServlet {
             }
 
             case "postNewGame": {
-                url = "/developer/newGame.jsp";
-
                 User myUser = (User) session.getAttribute("myUser");
 
                 try {
@@ -157,7 +156,7 @@ public class Developer extends HttpServlet {
 
                     request.setAttribute("message", "Game successfully created!");
 
-                    url = "/Public?action=viewCatalog";
+                    url = "/Private?action=viewDev&ampdevID=" + myUser.getUserID();
 
                 } catch (SQLException | NamingException ex) {
                     errors.add("Server down. Try again later.");
