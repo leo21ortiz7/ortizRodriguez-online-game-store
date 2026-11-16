@@ -183,7 +183,7 @@ public class CartDA {
             int cartGameID = rs.getInt("cart_game_id");
 
             Game game = new Game(
-                    rs.getInt("game_id"),
+                    rs.getInt("g.game_id"),
                     rs.getInt("user_id"),
                     rs.getString("title"),
                     rs.getString("description"),

@@ -13,6 +13,7 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <%@include file="../WEB-INF/jspf/nav.jspf" %>
         <h1>Checkout</h1>
         <br>
         <table>
@@ -21,15 +22,12 @@
             </c:forEach>
         </table>
         <p>Total: <c:out value="${totalPrice}"/></p>
+        
         <form action="Customer" method="post">
-            <input type="hidden" name="action" value="purchase">
-        </form>
-        <form action="Customer" method="post">
-
             <h1>Payment form</h1>
             <!-- Credit: https://web.dev/articles/payment-and-address-form-best-practices -->
             <input type="hidden" name="action" value="completePurchase"
-            <section>
+                   <section>
                 <label for="cc-number">Card number</label>
                 <!-- Allow for spaces and for shorter and longer payment card numbers -->
                 <input id="cc-number" name="cc-number" autocomplete="cc-number" inputmode="numeric" maxlength="50" pattern="[\d ]{10,30}" required>
@@ -57,12 +55,14 @@
                 <input type="text" id="zipCode" name="zipCode" autocomplete="postal-code" required>
             </section>
 
-
+            <section>
+                <label for="name">Name on Card</label>
+                <input id="name" name="name" autocomplete="name" maxlength="100" pattern="[\p{L} \-\.]+" required>
+            </section>
 
             <button id="complete-payment" type="submit">Complete payment</button>
 
             <p>NB: data entered in this form is not stored or shared.</p>
-
         </form>
     </body>
 </html>

@@ -13,6 +13,7 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <%@include file="../WEB-INF/jspf/nav.jspf" %>
         <h1>Receipt</h1>
         <p>Order ID: <c:out value="${orderID}"/></p>
         <p>Items: <c:out value="${itemCount}"/></p>

@@ -13,6 +13,7 @@
         <title>${game.gameTitle}</title>
     </head>
     <body>
+        <%@include file="../WEB-INF/jspf/nav.jspf" %>
 
         <h1><c:out value="${game.getGameTitle()}"/></h1>
 

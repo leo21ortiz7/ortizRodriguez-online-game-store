@@ -44,7 +44,7 @@ public class Customer extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     private static final Logger LOG = Logger.getLogger(Public.class.getName());
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = "";
@@ -66,59 +66,66 @@ public class Customer extends HttpServlet {
                     url = "/customer/customerHome.jsp";
                     break;
                 }
-                
+
                 case "viewLibrary": {
                     LinkedHashMap<Integer, Game> libraryGames = LibraryDA.selectLibrary(myUser.getUserID());
                     session.setAttribute("libraryGames", libraryGames);
                     url = "/customer/library.jsp";
                     break;
                 }
-                
+
                 case "viewCart": {
                     LinkedHashMap<Integer, Game> cartGames = CartDA.selectUserCartGames(myUser.getUserID());
-                    
+
                     BigDecimal totalPrice = BigDecimal.ZERO;
-                    cartGames.forEach((key, value) -> totalPrice.add(value.getGamePrice()));
-                    
-                    session.setAttribute("cartGames", cartGames);
+
+                    for (Game game : cartGames.values()) {
+                        totalPrice = totalPrice.add(game.getGamePrice());
+                    }
+
+                    request.setAttribute("cartGames", cartGames);
                     session.setAttribute("totalPrice", totalPrice);
-                    url = "customer.cart.jsp";
+                    url = "/customer/cart.jsp";
                     break;
                 }
-                
+
                 // HANDLE CHECKOUT
                 case "checkoutGame": {
                     String gameID = request.getParameter("gameID");
                     Game game = GameDA.selectGame(Integer.parseInt(gameID));
-                    
+
                     LinkedHashMap<Integer, Game> checkoutGames = new LinkedHashMap();
                     checkoutGames.put(game.getGameID(), game);
-                }
-                
-                case "checkoutCart": {
-                    LinkedHashMap<Integer, Game> checkoutGames = (LinkedHashMap<Integer, Game>) session.getAttribute("cartGames");
-                                        
+
                     request.setAttribute("showTags", false);
                     session.setAttribute("checkoutGames", checkoutGames);
-                    //FIX
-                    //session.setAttribute("totalPrice", game.getGamePrice());
+                    session.setAttribute("totalPrice", game.getGamePrice());
                     url = "/customer/checkout.jsp";
                     break;
                 }
-                
+
+                case "checkoutCart": {
+                    LinkedHashMap<Integer, Game> checkoutGames = CartDA.selectUserCartGames(myUser.getUserID());
+
+                    request.setAttribute("showTags", false);
+                    session.setAttribute("checkoutGames", checkoutGames);
+                    url = "/customer/checkout.jsp";
+                    break;
+                }
+
                 case "completePurchase": {
                     Order order = new Order();
                     order.setUserID(myUser.getUserID());
                     order.setOrderDate(LocalDateTime.now());
                     Payment payment = new Payment();
                     payment.setPaymentDate(LocalDateTime.now());
-                    
-                    LinkedHashMap<Integer, Game> purchaseGames 
+
+                    LinkedHashMap<Integer, Game> purchaseGames
                             = (LinkedHashMap<Integer, Game>) session.getAttribute("checkoutGames");
-                    
+
                     int orderID = Checkout.checkout(order, payment, purchaseGames);
                     int itemCount = purchaseGames.size();
-                    
+
                     request.setAttribute("orderID", orderID);
                     request.setAttribute("itemCount", itemCount);
                     url = "/customer/receipt.jsp";

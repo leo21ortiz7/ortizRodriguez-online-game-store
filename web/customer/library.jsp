@@ -14,6 +14,7 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <%@include file="../WEB-INF/jspf/nav.jspf" %>
         <h1>Library</h1>
         <table>
             <c:forEach items="${libraryGames}" var="game">
