@@ -88,6 +88,13 @@ public class Customer extends HttpServlet {
                     url = "/customer/cart.jsp";
                     break;
                 }
+                
+                case "removeFromCart": {
+                    String gameID = request.getParameter("gameID");
+                    CartDA.deleteCartGame(Integer.parseInt(gameID), myUser.getUserID());
+                    url = "/Customer?action=viewCart";
+                    break;
+                }
 
                 // HANDLE CHECKOUT
                 case "checkoutGame": {

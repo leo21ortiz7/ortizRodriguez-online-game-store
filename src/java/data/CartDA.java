@@ -64,6 +64,31 @@ public class CartDA {
 
         return rows;
     }
+    
+    public static int deleteCartGame(int gameID, int userID)
+            throws NamingException, SQLException {
+
+        ConnectionPool pool = ConnectionPool.getInstance();
+        Connection connection = pool.getConnection();
+        PreparedStatement ps = null;
+
+        String query
+                = "DELETE FROM cart_games "
+                + "WHERE game_id = ? "
+                + "AND user_id = ?";
+
+        ps = connection.prepareStatement(query);
+
+        ps.setInt(1, gameID);
+        ps.setInt(2, userID);
+
+        int rows = ps.executeUpdate();
+
+        ps.close();
+        pool.freeConnection(connection);
+
+        return rows;
+    }
 
     public static Game selectCartGame(int cartGameID)
             throws NamingException, SQLException {

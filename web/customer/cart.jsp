@@ -18,15 +18,22 @@
         <table>
             <c:forEach items="${cartGames}" var="game">
                 <%@include file="../WEB-INF/jspf/catalogGame.jspf" %>
+                <tr>
+                    <td>
+                        <form action="Customer" method="post">
+                            <input type="hidden" name="action" value="removeFromCart">
+                            <input type="hidden" name="gameID" value="${game.value.getGameID()}">
+                            <input type="submit" value="Remove From Cart">
+                        </form>
+                    </td>
+                </tr>
             </c:forEach>
         </table>
-            
+
         <p>Total: <c:out value="${totalPrice}"/></p>
 
         <form action="Customer" method="post">
             <input type="hidden" name="action" value="checkoutCart">
-            <input type="hidden" name="checkoutGames" value="${cartGames}">
-            <input type="hidden" name="totalPrice" value="${totalPrice}">
             <input type="submit" value="Checkout Cart">
         </form>
     </body>
