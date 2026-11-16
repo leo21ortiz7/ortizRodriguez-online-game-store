@@ -11,7 +11,13 @@
         <h1><c:out value="${developer.getUsername()}"/></h1>
         <a href="<c:url value='Developer?action=viewNewGame'/>" style='background-color: green'>New Game</a>
         <%@include file="../WEB-INF/jspf/searchBar.jspf" %>
-        <%@include file="../WEB-INF/jspf/tagsList.jspf" %>
+        <form action="${controller}" method="post">
+            <input type="hidden" name="action" value="multiTagFilter">
+            <%@include file="WEB-INF/jspf/tagsList.jspf" %>
+            <%@include file="WEB-INF/jspf/tagOptions.jspf" %>
+            <br>
+            <input type="submit" value="Filter Catalog">
+        </form>
         <br>
         <table>
             <c:forEach items="${devGames}" var="game">
