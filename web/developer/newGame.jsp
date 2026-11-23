@@ -123,7 +123,7 @@
             <input type="submit" value="${isUpdate ? 'Update Game' : 'Post Game'}">
         </form>
         <form action="Developer" method="post">
-            <input type="hidden" name="action" value="cancelGame">
+            <input type="hidden" name="action" value="viewOwnProfile">
             <input type="submit" value="${isUpdate ? 'Cancel Update' : 'Cancel Post'}">
         </form>
     </body>

@@ -33,12 +33,6 @@
                         </form>
 
                         <form action="Developer" method="post">
-                            <input type="hidden" name="action" value="viewUpdateTags">
-                            <input type="hidden" name="gameID" value="${game.value.getGameID()}">
-                            <input type="submit" value="Update Tags">
-                        </form>
-
-                        <form action="Developer" method="post">
                             <input type="hidden" name="action" value="viewUpdateGallery">
                             <input type="hidden" name="gameID" value="${game.value.getGameID()}">
                             <input type="submit" value="Update Gallery">

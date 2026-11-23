@@ -72,6 +72,11 @@ public class Developer extends HttpServlet {
                 break;
             }
 
+            case "viewOwnProfile": {
+                url = "/Private?action=viewDev&devID=" + myUser.getUserID();
+                break;
+            }
+
             case "viewNewGame": {
                 url = "/developer/newGame.jsp";
                 try {
@@ -111,8 +116,22 @@ public class Developer extends HttpServlet {
                 break;
             }
 
+            case "viewUpdateGallery": {
+                url = "/developer/updateGallery.jsp";
+                try {
+                    String gameID = request.getParameter("gameID");
+                    LinkedHashMap<Integer, byte[]> galleryImages = GameDA.selectGameGalleryImages(Integer.parseInt(gameID));
+                    request.setAttribute("galleryImages", galleryImages);
+                    request.setAttribute("gameID", gameID);
+                } catch (SQLException | NamingException ex) {
+                    errors.add("Server down. Try again later.");
+                    LOG.log(Level.SEVERE, "*** Server Error", ex);
+                }
+                break;
+            }
+
             case "deleteGame": {
-                url = "/Private?action=viewDev&amp;devID=".concat(Integer.toString(myUser.getUserID()));
+                url = "/Private?action=viewDev&devID=" + myUser.getUserID();
 
                 try {
                     String gameID = request.getParameter("gameID");
@@ -120,13 +139,43 @@ public class Developer extends HttpServlet {
                 } catch (SQLException | NamingException ex) {
                     errors.add("Server down. Try again later.");
                     LOG.log(Level.SEVERE, "*** Server Error", ex);
-
                 }
                 break;
             }
 
-            case "cancelGame": {
-                url = "/Private?action=viewDev&amp;devID=".concat(Integer.toString(myUser.getUserID()));
+            case "deleteGalleryImage": {
+                try {
+                    String imageID = request.getParameter("imageID");
+                    String gameID = request.getParameter("gameID");
+                    GameDA.deleteGalleryImage(Integer.parseInt(imageID));
+                    url = "/Developer?action=viewUpdateGallery&gameID=" + gameID;
+                } catch (SQLException | NamingException ex) {
+                    errors.add("Server down. Try again later.");
+                    LOG.log(Level.SEVERE, "*** Server Error", ex);
+                }
+                break;
+            }
+
+            case "addGalleryImages": {
+                try {
+                    String gameID = request.getParameter("gameID");
+
+                    List<Part> galleryImages = request.getParts()
+                            .stream()
+                            .filter(part -> part.getName().equals("galleryImages"))
+                            .toList();
+
+                    for (Part image : galleryImages) {
+                        if (image.getSize() > 0) {
+                            byte[] imageBytes = image.getInputStream().readAllBytes();
+                            GameDA.insertGalleryImage(Integer.parseInt(gameID), imageBytes);
+                        }
+                    }
+                    url = "/Developer?action=viewUpdateGallery&gameID=" + gameID;
+                } catch (SQLException | NamingException ex) {
+                    errors.add("Server down. Try again later.");
+                    LOG.log(Level.SEVERE, "*** Server Error", ex);
+                }
                 break;
             }
 
@@ -309,7 +358,7 @@ public class Developer extends HttpServlet {
                      */
                     List<Part> galleryImages = request.getParts()
                             .stream()
-                            .filter(part -> part.getName().equals("galleryImages") && part.getSize() > 0)
+                            .filter(part -> part.getName().equals("galleryImages"))
                             .toList();
 
                     for (Part image : galleryImages) {
@@ -332,7 +381,7 @@ public class Developer extends HttpServlet {
 
                     request.setAttribute("message", "Game successfully created!");
 
-                    url = "/Private?action=viewDev&amp;devID=" + myUser.getUserID();
+                    url = "/Private?action=viewDev&devID=" + myUser.getUserID();
 
                 } catch (SQLException | NamingException ex) {
                     errors.add("Server down. Try again later.");
