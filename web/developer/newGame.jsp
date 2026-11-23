@@ -13,16 +13,20 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>New Game</h1>
+        <h1>${isUpdate ? 'Update Game' : 'Post New Game'}</h1>
 
         <form action="Developer" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="action" value="postNewGame">
+            <input type="hidden" name="action" value="${isUpdate ? 'updateGame' : 'postNewGame'}">
+            <c:if test="${isUpdate}">
+                <input type="hidden" name="gameID" value="${game.getGameID()}">
+            </c:if>
 
             <!-- Game Title -->
             <label for="title">Game Title:</label>
             <input type="text"
                    id="title"
                    name="title"
+                   value="${game.getGameTitle()}"
                    required>
             <br><br>
 
@@ -33,7 +37,7 @@
                       name="description"
                       rows="6"
                       cols="50"
-                      required></textarea>
+                      required>${game.getGameDescription()}</textarea>
             <br><br>
 
             <!-- Price -->
@@ -43,6 +47,7 @@
                    name="price"
                    step="0.01"
                    min="0"
+                   value="${game.getGamePrice()}"
                    required>
             <br><br>
 
@@ -50,7 +55,8 @@
             <label for="release_date">Expected Release Date (Today's date if left blank):</label>
             <input type="date"
                    id="release_date"
-                   name="release_date">
+                   name="release_date"
+                   value="${game.getReleaseDate()}">
             <br><br>
 
             <!-- Released -->
@@ -58,42 +64,67 @@
             <input type="checkbox"
                    id="released"
                    name="released"
-                   value="true">
+                   ${game.isReleased() ? 'checked' : ''}>
             <br><br>
 
             <!-- Cover Art -->
-            <label for="coverart">Cover Art:</label>
+            <c:if test="${isUpdate}">
+                <label>Current Image</label>
+                <br>
+                <img src="ImageProcess?imageParam=cover&amp;gameID=${game.getGameID()}"
+                     alt="Cover Image"
+                     style="max-width: 300px;"
+                     />
+                <br>
+            </c:if>
+            <label for="coverart">${isUpdate ? 'Replace ' : ''}Cover Art:</label>
             <input type="file"
                    id="coverart"
                    name="coverart"
                    accept="image/jpeg,image/png"
-                   required>
+                   ${isUpdate ? '' : 'required'}>
             <br><br>
 
             <!-- Gallery Images -->
-            <label for="galleryImages">Gallery Images:</label>
-            <input type="file"
-                   id="galleryImages"
-                   name="galleryImages"
-                   accept="image/jpeg,image/png"
-                   multiple>
-            <br><br>
+            <c:if test="${!isUpdate}">
+                <label for="galleryImages">Gallery Images:</label>
+                <input type="file"
+                       id="galleryImages"
+                       name="galleryImages"
+                       accept="image/jpeg,image/png"
+                       multiple>
+                <br><br>
+            </c:if>
 
             <!-- Tags -->
-            <%@include file="../WEB-INF/jspf/tagsList.jspf" %>
-            <br><br>
+                <%@include file="../WEB-INF/jspf/tagsList.jspf" %>
+                <br><br>
 
             <!-- Game File -->
-            <label for="game_filepath">Game File:</label>
+            <c:if test="${isUpdate}">
+                <p>Current File:</p>
+                <c:choose>
+                    <c:when test="${game.getGameFilePath().isBlank()}">
+                        <p>No File Path</p>
+                    </c:when>
+                    <c:otherwise>
+                        <p><c:out value="${game.getGameFilePath()}"/></p>
+                    </c:otherwise>
+                </c:choose>
+            </c:if>
+            <label for="game_filepath">${isUpdate ? 'Replace ' : ''}Game File:</label>
             <input type="file"
                    id="game_filepath"
                    name="game_filepath"
                    accept=".zip"
-                   required>
+                   ${isUpdate ? '' : 'required'}>
             <br><br>
 
-            <input type="submit" value="Create Game">
-
+            <input type="submit" value="${isUpdate ? 'Update Game' : 'Post Game'}">
+        </form>
+        <form action="Developer" method="post">
+            <input type="hidden" name="action" value="cancelGame">
+            <input type="submit" value="${isUpdate ? 'Cancel Update' : 'Cancel Post'}">
         </form>
     </body>
 </html>

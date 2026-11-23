@@ -18,7 +18,12 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.sql.SQLException;
 import java.time.format.DateTimeParseException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.LinkedHashMap;
+import java.io.IOException;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -53,6 +58,7 @@ public class Developer extends HttpServlet {
         String action = request.getParameter("action");
 
         HttpSession session = request.getSession();
+        User myUser = (User) session.getAttribute("myUser");
 
         ArrayList errors = new ArrayList();
 
@@ -65,10 +71,37 @@ public class Developer extends HttpServlet {
                 url = "/developer/developerHome.jsp";
                 break;
             }
-            
+
             case "viewNewGame": {
                 url = "/developer/newGame.jsp";
                 try {
+                    request.setAttribute("tags", TagDA.selectAllTags());
+                    request.setAttribute("showTagControls", true);
+                } catch (SQLException | NamingException ex) {
+                    errors.add("Server down. Try again later.");
+                    LOG.log(Level.SEVERE, "*** Server Error", ex);
+                }
+                break;
+            }
+
+            case "viewUpdateGame": {
+                url = "/developer/newGame.jsp";
+                try {
+                    Game game = GameDA.selectGame(Integer.parseInt(request.getParameter("gameID")));
+
+                    if (game == null) {
+                        errors.add("Game not found.");
+                        url = "/Developer?action=viewDevHome";
+                        break;
+                    }
+
+                    LinkedHashMap<Integer, Tag> gameTags = new LinkedHashMap();
+                    gameTags = TagDA.selectAllGameTags(game.getGameID());
+
+                    gameTags.forEach((id, tag) -> request.setAttribute("isChecked_".concat(id.toString()), true));
+
+                    request.setAttribute("game", game);
+                    request.setAttribute("isUpdate", true);
                     request.setAttribute("tags", TagDA.selectAllTags());
                     request.setAttribute("showTagControls", false);
                 } catch (SQLException | NamingException ex) {
@@ -78,9 +111,152 @@ public class Developer extends HttpServlet {
                 break;
             }
 
-            case "postNewGame": {
-                User myUser = (User) session.getAttribute("myUser");
+            case "deleteGame": {
+                url = "/Private?action=viewDev&amp;devID=".concat(Integer.toString(myUser.getUserID()));
 
+                try {
+                    String gameID = request.getParameter("gameID");
+                    GameDA.deleteGame(Integer.parseInt(gameID));
+                } catch (SQLException | NamingException ex) {
+                    errors.add("Server down. Try again later.");
+                    LOG.log(Level.SEVERE, "*** Server Error", ex);
+
+                }
+                break;
+            }
+
+            case "cancelGame": {
+                url = "/Private?action=viewDev&amp;devID=".concat(Integer.toString(myUser.getUserID()));
+                break;
+            }
+
+            case "updateGame": {
+                try {
+                    int gameID = Integer.parseInt(request.getParameter("gameID"));
+
+                    // Retrieve existing game
+                    Game existingGame = GameDA.selectGame(gameID);
+
+                    if (existingGame == null) {
+                        errors.add("Game not found.");
+                        url = "/Private";
+                        break;
+                    }
+
+                    // Verify ownership
+                    if (existingGame.getUserID() != myUser.getUserID()) {
+                        errors.add("You are not authorized to update this game.");
+                        url = "/Private";
+                        break;
+                    }
+
+                    /*
+                     * Game Information
+                     */
+                    String title = request.getParameter("title");
+                    String description = request.getParameter("description");
+
+                    BigDecimal price = new BigDecimal(request.getParameter("price"));
+
+                    String releaseDateString = request.getParameter("release_date");
+
+                    LocalDate releaseDate = releaseDateString.isEmpty()
+                            ? LocalDate.now()
+                            : LocalDate.parse(releaseDateString);
+
+                    boolean released = request.getParameter("released") != null;
+
+                    /*
+                     * Cover Art
+                     */
+                    byte[] coverArt = existingGame.getCoverArt();
+
+                    Part coverArtPart = request.getPart("coverart");
+
+                    if (coverArtPart != null && coverArtPart.getSize() > 0) {
+                        coverArt = coverArtPart.getInputStream().readAllBytes();
+                    }
+
+                    /*
+                     * Game File
+                     */
+                    String gameFilePath = existingGame.getGameFilePath();
+
+                    Part gameFilePart = request.getPart("game_filepath");
+
+                    if (gameFilePart != null && gameFilePart.getSize() > 0) {
+                        gameFilePath = gameFilePart.getSubmittedFileName();
+                    }
+
+                    /*
+                     * Update Game
+                     */
+                    GameDA.updateGame(
+                            gameID,
+                            title,
+                            description,
+                            price,
+                            releaseDate,
+                            released,
+                            coverArt,
+                            gameFilePath
+                    );
+
+                    /*
+                     * Update Game Tags
+                     */
+                    LinkedHashMap<Integer, Tag> oldTags
+                            = TagDA.selectAllGameTags(gameID);
+
+                    Set<Integer> newTagIDs = new HashSet<>();
+
+                    String[] selectedTags = request.getParameterValues("tags");
+
+                    if (selectedTags != null) {
+                        for (String tagID : selectedTags) {
+                            newTagIDs.add(Integer.parseInt(tagID));
+                        }
+                    }
+
+                    // Delete removed tags
+                    for (Integer oldTagID : oldTags.keySet()) {
+                        if (!newTagIDs.contains(oldTagID)) {
+                            TagDA.deleteGameTag(gameID, oldTagID);
+                        }
+                    }
+
+                    // Insert newly selected tags
+                    for (Integer newTagID : newTagIDs) {
+                        if (!oldTags.containsKey(newTagID)) {
+                            TagDA.insertGameTag(gameID, newTagID);
+                        }
+                    }
+
+                    request.setAttribute("message", "Game successfully updated!");
+
+                    url = "/Private?action=viewDev&devID=" + myUser.getUserID();
+
+                } catch (SQLException | NamingException ex) {
+                    errors.add("Server down. Try again later.");
+                    LOG.log(Level.SEVERE, "*** Server Error", ex);
+
+                } catch (NumberFormatException ex) {
+                    errors.add("Invalid number entered.");
+                    LOG.log(Level.SEVERE, "*** Invalid Number", ex);
+
+                } catch (DateTimeParseException ex) {
+                    errors.add("Invalid release date.");
+                    LOG.log(Level.SEVERE, "*** Invalid Date", ex);
+
+                } catch (IOException | ServletException ex) {
+                    errors.add("There was a problem processing the uploaded files.");
+                    LOG.log(Level.SEVERE, "*** File Upload Error", ex);
+                }
+
+                break;
+            }
+
+            case "postNewGame": {
                 try {
                     String title = request.getParameter("title");
                     String description = request.getParameter("description");
@@ -123,17 +299,17 @@ public class Developer extends HttpServlet {
                     );
 
                     // Insert game
-                    GameDA.insertGame(game);
+                    int generatedID = GameDA.insertGame(game);
 
-                    // Retrieve the newly created game so we have its ID
-                    game = GameDA.selectGame(game.getGameID());
+                    // Set gameID to id genereated by query
+                    game.setGameID(generatedID);
 
                     /*
                      * Gallery Images
                      */
                     List<Part> galleryImages = request.getParts()
                             .stream()
-                            .filter(part -> part.getName().equals("galleryImages"))
+                            .filter(part -> part.getName().equals("galleryImages") && part.getSize() > 0)
                             .toList();
 
                     for (Part image : galleryImages) {
@@ -156,7 +332,7 @@ public class Developer extends HttpServlet {
 
                     request.setAttribute("message", "Game successfully created!");
 
-                    url = "/Private?action=viewDev&ampdevID=" + myUser.getUserID();
+                    url = "/Private?action=viewDev&amp;devID=" + myUser.getUserID();
 
                 } catch (SQLException | NamingException ex) {
                     errors.add("Server down. Try again later.");
@@ -175,7 +351,7 @@ public class Developer extends HttpServlet {
                 break;
             }
         }
-        
+
         request.setAttribute("errors", errors);
 
         getServletContext().getRequestDispatcher(url).forward(request, response);

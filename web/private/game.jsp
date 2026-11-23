@@ -80,7 +80,6 @@
                 </c:when>
                 <c:otherwise>
                     <c:forEach items="${game.getGalleryImages()}" var="image" varStatus="status">
-
                         <img
                             src="ImageProcess?imageParam=gallery&amp;imageID=${image.key}"
                             alt="Gallery image ${status.count}"
@@ -149,7 +148,7 @@
             <h2>Developer Options</h2>
 
             <form
-                action="Private"
+                action="Developer"
                 method="post"
                 onsubmit="return confirm('Are you sure you want to delete this game?');"
                 >
@@ -160,6 +159,6 @@
 
         </c:if>
 
-        <script src="${pageContext.request.contextPath}/js/asyncActions.js"></script>
+        <script src="${pageContext.request.contextPath}/js/asyncActions.js"/>
     </body>
 </html>

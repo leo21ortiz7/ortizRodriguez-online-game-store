@@ -145,15 +145,7 @@ public class Private extends HttpServlet {
                     
                     break;
                 }
-
-                case "deleteGame": {
-                    url = "/Public?action=viewCatalog";
-                    
-                    String gameID = request.getParameter("gameID");
-                    GameDA.deleteGame(Integer.parseInt(gameID));
-                    break;
-                }
-
+                
                 case "viewDev": {
                     url = "/private/developerProfile.jsp";
 

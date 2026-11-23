@@ -54,22 +54,24 @@ public class GameDA {
 
         rs = ps.getGeneratedKeys();
 
+        int generatedID = 0;
         if (rs.next()) {
-            game.setGameID(rs.getInt(1));
+            generatedID = rs.getInt(1);
+            game.setGameID(generatedID);
         }
 
         rs.close();
         ps.close();
         pool.freeConnection(connection);
 
-        return rows;
+        return generatedID;
     }
 
     public static int updateGame(
-            Game oldGame,
+            int oldGameID,
             String newTitle,
             String newDescription,
-            double newPrice,
+            BigDecimal newPrice,
             LocalDate newReleaseDate,
             boolean newIsReleased,
             byte[] newCoverArt,
@@ -82,10 +84,10 @@ public class GameDA {
         String query = "UPDATE games SET "
                 + "title = ?, "
                 + "description = ?, "
-                + "price = ? "
-                + "release_date = ? "
-                + "released = ? "
-                + "coverart = ? "
+                + "price = ?, "
+                + "release_date = ?, "
+                + "released = ?, "
+                + "coverart = ?, "
                 + "game_filepath = ? "
                 + "WHERE game_id = ?";
 
@@ -93,11 +95,12 @@ public class GameDA {
 
         ps.setString(1, newTitle);
         ps.setString(2, newDescription);
-        ps.setDouble(3, newPrice);
+        ps.setBigDecimal(3, newPrice);
         ps.setDate(4, Date.valueOf(newReleaseDate));
         ps.setBoolean(5, newIsReleased);
         ps.setBytes(6, newCoverArt);
         ps.setString(7, newGameFilePath);
+        ps.setInt(8, oldGameID);
 
         int rows = ps.executeUpdate();
 
@@ -107,7 +110,7 @@ public class GameDA {
         return rows;
 
     }
-    
+
     public static int deleteGame(int gameID) throws NamingException, SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();
@@ -165,7 +168,7 @@ public class GameDA {
         return games;
 
     }
-    
+
     public static LinkedHashMap<Integer, Game> selectGamesByUserID(int userID) throws NamingException, SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = pool.getConnection();

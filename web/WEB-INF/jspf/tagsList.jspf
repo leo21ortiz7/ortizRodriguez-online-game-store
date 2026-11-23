@@ -30,7 +30,8 @@
                id="tag_${tag.tagID}"
                name="tags"
                value="${tag.tagID}"
-               class="tag-checkbox">
+               class="tag-checkbox"
+               ${requestScope["isChecked_".concat(tag.tagID.toString())] ? 'checked' : ''}>
         <label for="tag_${tag.tagID}" class="tag-label">
             ${tag.tagName}
         </label>
